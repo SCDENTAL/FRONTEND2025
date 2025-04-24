@@ -1,0 +1,54 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .mat-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    flex: 1;
+    margin-top: 64px; // altura típica de toolbar
+  }
+  
+  mat-sidenav-container {
+    flex: 1;
+    height: calc(100vh - 64px); // ajusta al alto disponible
+  }
+  
+  mat-sidenav {
+    width: 240px;
+    background-color: #f5f5f5;
+  }
+  
+  .mat-list-item {
+    font-size: 16px;
+  }
+  
+  .content {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+    }
+  
+    mat-sidenav-container {
+      height: auto;
+    }
+  
+    mat-sidenav {
+      width: 200px;
+    }
+  }
+  
