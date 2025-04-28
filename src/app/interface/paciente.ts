@@ -4,5 +4,5 @@ export interface Paciente {
     apellido:string;
     dni: number;
     telefono: number;
-    email: string;
+    email: string;    
 }

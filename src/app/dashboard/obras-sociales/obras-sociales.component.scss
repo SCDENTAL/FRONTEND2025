@@ -21,16 +21,14 @@
   button {
     margin-right: 8px;
   }
-  
-  /* Botón agregar */
+    
   .boton-agregar button {
     min-width: 200px;
     height: 48px;
     font-size: 16px;
     border-radius: 12px;
   }
-  
-  /* Responsive para mobile */
+    
   @media (max-width: 600px) {
     .tabla-container {
       margin: 16px;
