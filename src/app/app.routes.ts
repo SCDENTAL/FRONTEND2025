@@ -6,6 +6,7 @@ import { AuthGuard } from './service/auth.guard';
 import { PacientesComponent } from './dashboard/pacientes/pacientes.component';
 import { ObrasSocialesComponent } from './dashboard/obras-sociales/obras-sociales.component';
 import { EmpleadosComponent } from './dashboard/empleados/empleados.component';
+import { TurnosComponent } from './dashboard/turnos/turnos.component';
 
 
 export const routes: Routes = [
@@ -20,7 +21,8 @@ export const routes: Routes = [
             { path: 'odontologos', component: EmpleadosComponent },
             { path: 'pacientes', component: PacientesComponent },
             { path: 'obras-sociales', component: ObrasSocialesComponent },
-            { path: '', redirectTo: 'odontologos', pathMatch: 'full' }
+            { path: 'turnos', component: TurnosComponent },
+            { path: '', redirectTo: 'pacientes', pathMatch: 'full' }
         ]
     },
     {

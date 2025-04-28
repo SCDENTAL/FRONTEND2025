@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-    
-    private apiUrl = 'https://localhost:7292/api/auth'; // Cambialo si usás otro puerto o URL
+
+  private apiUrl = 'https://localhost:7292/api/auth';
 
   constructor(private http: HttpClient) {
 
@@ -23,6 +23,10 @@ export class AuthService {
 
   register(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, { email, password });
+  }
+
+  logout() {
+    localStorage.removeItem('token');
   }
 
   getToken(): string | null {
