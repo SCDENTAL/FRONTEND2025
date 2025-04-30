@@ -1,4 +1,5 @@
 .sidenav-container {
+<<<<<<< HEAD
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -27,3 +28,45 @@
     }
   }
   
+=======
+  height: 100vh;
+}
+
+.sidenav {
+  width: 250px;
+}
+
+.sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0 16px;
+
+  .menu-button {
+    margin-right: 16px;
+  }
+
+  .app-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 16px;
+}
+
+@media (min-width: 769px) {
+  .menu-button {
+    display: none;
+  }
+}
+>>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5

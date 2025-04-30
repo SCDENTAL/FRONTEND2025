@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <h1 mat-dialog-title>{{ data?.obraSocial ? 'Editar' : 'Agregar' }} Obra Social</h1>
 
 <div mat-dialog-content>
@@ -18,4 +19,31 @@
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">
     {{ data?.obraSocial ? 'Guardar Cambios' : 'Agregar' }}
   </button>
+=======
+<div class="contenedor-dialog">
+  <div class="header-dialog">
+    <h1 class="title">{{ data?.obraSocial ? 'Editar' : 'Agregar' }} Obra Social</h1>
+  </div>
+
+  <div class="body-dialog">
+    <form [formGroup]="form" class="form-container">
+      <div class="input-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" required>
+          <mat-error *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)">
+            El nombre es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <div class="footer-dialog">
+    <button mat-stroked-button color="warn" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+      {{ data?.obraSocial ? 'Guardar Cambios' : 'Agregar' }}
+    </button>
+  </div>
+>>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5
 </div>

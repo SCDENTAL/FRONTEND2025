@@ -1,1 +1,50 @@
+<<<<<<< HEAD
 <p>pacientes works!</p>
+=======
+<div class="tabla-container">
+    <div class="boton-agregar">
+      <button mat-raised-button color="primary" (click)="agregarPaciente()">Agregar Paciente</button>
+    </div>
+  
+    <table mat-table [dataSource]="pacientes" class="tabla">
+  
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+        <td mat-cell *matCellDef="let paciente"> {{ paciente.nombre }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef> Apellido </th>
+        <td mat-cell *matCellDef="let paciente"> {{ paciente.apellido }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="dni">
+        <th mat-header-cell *matHeaderCellDef> DNI </th>
+        <td mat-cell *matCellDef="let paciente"> {{ paciente.dni }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+        <td mat-cell *matCellDef="let paciente"> {{ paciente.telefono }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let paciente"> {{ paciente.email }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="opciones">
+        <th mat-header-cell *matHeaderCellDef> Opciones </th>
+        <td mat-cell *matCellDef="let paciente">
+          <button mat-button color="accent" (click)="editarPaciente(paciente)">Editar</button>
+          <button mat-button color="warn" (click)="borrarPaciente(paciente.id)">Borrar</button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+    </table>
+  </div>
+  
+>>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5

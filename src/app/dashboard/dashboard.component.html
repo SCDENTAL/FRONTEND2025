@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+<<<<<<< HEAD
     <mat-sidenav mode="side" opened class="sidenav">
       <mat-toolbar color="primary">Panel Admin</mat-toolbar>
       <mat-nav-list>
@@ -15,3 +16,30 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
   
+=======
+  
+  <mat-sidenav #drawer class="sidenav" [mode]="sidenavMode" [opened]="sidenavOpened">
+    <mat-nav-list>
+      <a mat-list-item routerLink="turnos" routerLinkActive="active" (click)="closeDrawer()">Turnos</a>
+      <a mat-list-item routerLink="pacientes" routerLinkActive="active" (click)="closeDrawer()">Pacientes</a>
+      <a mat-list-item routerLink="odontologos" routerLinkActive="active" (click)="closeDrawer()">Odontólogos</a>
+      <a mat-list-item routerLink="obras-sociales" routerLinkActive="active" (click)="closeDrawer()">Obras Sociales</a>
+      <button mat-button (click)="logout(); closeDrawer()" class="logout-button">Cerrar sesión</button>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="app-title">Panel Admin</span>
+    </mat-toolbar>
+
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+>>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5
