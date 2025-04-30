@@ -53,7 +53,8 @@ export class ObrasSocialesComponent implements OnInit {
 
   agregarObraSocial() {
     const dialogRef = this.dialog.open(ObraSocialDialogComponent, {
-      width: '400px'
+
+      
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -70,14 +71,11 @@ export class ObrasSocialesComponent implements OnInit {
       }
     });
   }
-
-
   
-
   editarObra(obra: ObraSocial) {
     const dialogRef = this.dialog.open(ObraSocialDialogComponent, {
-      width: '400px',
-      data: { obraSocial: obra }
+
+       data: { obraSocial: obra }
     });
 
     dialogRef.afterClosed().subscribe(result => {
