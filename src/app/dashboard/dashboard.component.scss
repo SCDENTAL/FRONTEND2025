@@ -1,34 +1,4 @@
 .sidenav-container {
-<<<<<<< HEAD
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .sidenav {
-    width: 250px;
-  }
-  
-  .sidenav-content {
-    padding: 16px;
-  }
-  
-
-  @media (max-width: 768px) {
-    .sidenav-container {
-      flex-direction: column;
-    }
-  
-    .sidenav {
-      width: 100%;
-    }
-  
-    .sidenav-content {
-      padding: 12px;
-    }
-  }
-  
-=======
   height: 100vh;
 }
 
@@ -69,4 +39,3 @@
     display: none;
   }
 }
->>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5

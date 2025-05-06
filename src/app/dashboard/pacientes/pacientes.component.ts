@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import { Component } from '@angular/core';
-=======
 import { Component, OnInit } from '@angular/core';
 import { Paciente } from '../../interface/paciente';
 import { PacienteService } from '../../service/paciente.service';
@@ -10,19 +7,10 @@ import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { PacientesDialogComponent } from '../../dialogs/pacientes-dialog/pacientes-dialog.component';
->>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5
 
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-<<<<<<< HEAD
-  imports: [],
-  templateUrl: './pacientes.component.html',
-  styleUrl: './pacientes.component.scss'
-})
-export class PacientesComponent {
-
-=======
   templateUrl: './pacientes.component.html',
   styleUrls: ['./pacientes.component.scss'],
   imports: [
@@ -56,44 +44,29 @@ export class PacientesComponent implements OnInit {
     });
   }
 
-  agregarPaciente() {
-    
-    const dialogRef = this.dialog.open(PacientesDialogComponent, {});
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.pacienteService.crearPaciente(result).subscribe({
-          next: () => {
-            this.cargarPacientes();
-            Swal.fire('Éxito', 'Paciente agregado correctamente', 'success');
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo agregar el paciente', 'error');
-          }
-        });
-      }
-    });
-  }
-
   editarPaciente(paciente: Paciente) {
     const dialogRef = this.dialog.open(PacientesDialogComponent, {
       data: { paciente }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.pacienteService.actualizarPaciente(paciente.id, result).subscribe({
-          next: () => {
-            this.cargarPacientes();
-            Swal.fire('Éxito', 'Paciente actualizado correctamente', 'success');
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo actualizar el paciente', 'error');
-          }
-        });
+        this.cargarPacientes(); // Solo recarga la tabla, no muestra Swal
       }
     });
   }
+  
+  agregarPaciente() {
+    const dialogRef = this.dialog.open(PacientesDialogComponent, {});
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.cargarPacientes(); // Solo recarga la tabla
+      }
+    });
+  }
+  
+  
 
   borrarPaciente(id: number) {
     Swal.fire({
@@ -119,5 +92,4 @@ export class PacientesComponent implements OnInit {
       }
     });
   }
->>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5
 }

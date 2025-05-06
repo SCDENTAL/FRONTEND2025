@@ -1,14 +1,11 @@
-<<<<<<< HEAD
-<p>pacientes-dialog works!</p>
-=======
 <div class="contenedor-dialog">
     <div class="header-dialog">
-      <h1 class="title">{{ data?.paciente ? 'Editar' : 'Agregar' }} Obra Social</h1>
+      <h1 class="title">{{ data?.paciente ? 'Editar' : 'Agregar' }} Crear Paciente</h1>
     </div>
 
     
     <div class="body-dialog">
-      <form [formGroup]="form" class="form-container">
+      <form *ngIf="form" [formGroup]="form" class="form-container">
         <div class="input-group">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nombre</mat-label>
@@ -63,9 +60,8 @@
     <div class="footer-dialog">
       <button mat-stroked-button color="warn" (click)="onCancel()">Cancelar</button>
       <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">
-        {{ data?.obraSocial ? 'Guardar Cambios' : 'Agregar' }}
+        {{ data?.paciente ? 'Guardar Cambios' : 'Agregar' }}
       </button>
     </div>
   </div>
   
->>>>>>> 9ef5bf4ab63e1a6cf1e9e4291dfa49080add21c5
