@@ -26,7 +26,8 @@ export class ObraSocialDialogComponent {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ObraSocialDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  ) 
+  {
     this.form = this.fb.group({
       nombre: [data?.obraSocial?.nombre || '', Validators.required],
       descripcion: [data?.obraSocial?.descripcion || '']

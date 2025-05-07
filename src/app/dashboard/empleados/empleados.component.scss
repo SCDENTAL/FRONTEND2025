@@ -1,0 +1,46 @@
+.tabla-container {
+    margin: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-x: auto;
+    align-items: center;
+  }
+  
+  .boton-agregar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  table {
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  button {
+    margin-right: 8px;
+  }
+    
+  .boton-agregar button {
+    min-width: 200px;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+    
+  @media (max-width: 600px) {
+    .tabla-container {
+      margin: 16px;
+    }
+  
+    .boton-agregar {
+      justify-content: center;
+    }
+  
+    .boton-agregar button {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+  
