@@ -22,6 +22,7 @@ import { PacientesDialogComponent } from '../../dialogs/pacientes-dialog/pacient
 export class PacientesComponent implements OnInit {
 
   displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'telefono', 'email', 'opciones'];
+  
   pacientes: Paciente[] = [];
 
   constructor(

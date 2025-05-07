@@ -13,17 +13,11 @@ import { ObraSocialDialogComponent } from '../../dialogs/obra-social-dialog/obra
   standalone: true,
   templateUrl: './obras-sociales.component.html',
   styleUrls: ['./obras-sociales.component.scss'],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatTableModule,    
-  ]
+  imports: [CommonModule, MatButtonModule, MatTableModule],
 })
 export class ObrasSocialesComponent implements OnInit {
-
-  
-  
   displayedColumns: string[] = ['nombre', 'opciones'];
+
   obrasSociales: ObraSocial[] = [];
 
   constructor(
@@ -31,14 +25,9 @@ export class ObrasSocialesComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-
-
-
   ngOnInit(): void {
     this.cargarObrasSociales();
   }
-
-
 
   cargarObrasSociales() {
     this.obraSocialService.getObrasSociales().subscribe({
@@ -47,38 +36,38 @@ export class ObrasSocialesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar obras sociales', error);
-      }
+      },
     });
   }
 
   agregarObraSocial() {
-    const dialogRef = this.dialog.open(ObraSocialDialogComponent, {
+    const dialogRef = this.dialog.open(ObraSocialDialogComponent, {});
 
-      
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.obraSocialService.crearObraSocial(result).subscribe({
           next: () => {
             this.cargarObrasSociales();
-            Swal.fire('Éxito', 'Se ha agregado una obra social con éxito', 'success');
+            Swal.fire(
+              'Éxito',
+              'Se ha agregado una obra social con éxito',
+              'success'
+            );
           },
           error: () => {
             Swal.fire('Error', 'No se pudo agregar la obra social', 'error');
-          }
+          },
         });
       }
     });
   }
-  
+
   editarObra(obra: ObraSocial) {
     const dialogRef = this.dialog.open(ObraSocialDialogComponent, {
-
-       data: { obraSocial: obra }
+      data: { obraSocial: obra },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.obraSocialService.actualizarObraSocial(obra.id, result).subscribe({
           next: () => {
@@ -87,7 +76,7 @@ export class ObrasSocialesComponent implements OnInit {
           },
           error: () => {
             Swal.fire('Error', 'No se pudo actualizar la obra social', 'error');
-          }
+          },
         });
       }
     });
@@ -102,22 +91,23 @@ export class ObrasSocialesComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.obraSocialService.eliminarObraSocial(id).subscribe({
           next: () => {
             this.cargarObrasSociales();
-            Swal.fire('Eliminado!', 'La obra social ha sido eliminada.', 'success');
+            Swal.fire(
+              'Eliminado!',
+              'La obra social ha sido eliminada.',
+              'success'
+            );
           },
           error: () => {
             Swal.fire('Error!', 'No se pudo eliminar la obra social.', 'error');
-          }
+          },
         });
       }
     });
-    
   }
-
-  
 }
