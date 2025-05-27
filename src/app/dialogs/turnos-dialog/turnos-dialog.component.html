@@ -1,1 +1,33 @@
-<p>turnos-dialog works!</p>
+<h1 mat-dialog-title>Editar Turno</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <mat-label>Paciente</mat-label>
+      <input matInput formControlName="nombrePaciente">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Odontólogo</mat-label>
+      <input matInput formControlName="nombreOdontologo">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Fecha y hora de inicio</mat-label>
+      <input matInput type="datetime-local" formControlName="fechaHoraInicio">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Fecha y hora de fin</mat-label>
+      <input matInput type="datetime-local" formControlName="fechaHoraFin">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="estado">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-button color="primary" (click)="guardar()">Guardar</button>
+</div>

@@ -1,0 +1,37 @@
+<!-- <h2 mat-dialog-title>Asignar Turno</h2>
+<mat-dialog-content>
+
+  <mat-form-field appearance="fill" class="w-full mb-2">
+    <mat-label>Odontólogo</mat-label>
+    <mat-select [(ngModel)]="turno.odontologoId">
+      <mat-option *ngFor="let o of odontologos" [value]="o.id">{{ o.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full mb-2">
+    <mat-label>Buscar paciente por DNI</mat-label>
+    <input matInput [(ngModel)]="dniFiltro" (input)="filtrarPacientesPorDni()" placeholder="Ej: 30123456">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full mb-2">
+    <mat-label>Paciente</mat-label>
+    <mat-select [(ngModel)]="turno.pacienteId">
+      <mat-option *ngFor="let p of pacientesFiltrados" [value]="p.id">
+        {{ p.nombre }} (DNI: {{ p.dni }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full mb-2">
+    <mat-label>Obra Social</mat-label>
+    <mat-select [(ngModel)]="turno.obraSocialId">
+      <mat-option *ngFor="let o of obrasSociales" [value]="o.id">{{ o.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="guardar()">Guardar</button>
+</mat-dialog-actions> -->
