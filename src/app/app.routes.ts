@@ -7,11 +7,13 @@ import { PacientesComponent } from './dashboard/pacientes/pacientes.component';
 import { ObrasSocialesComponent } from './dashboard/obras-sociales/obras-sociales.component';
 import { EmpleadosComponent } from './dashboard/empleados/empleados.component';
 import { TurnosComponent } from './dashboard/turnos/turnos.component';
+import { RegistroComponent } from './registro/registro.component';
 
 
 export const routes: Routes = [
 
     { path: 'login', component: LoginComponent },
+    {path: 'registro', component: RegistroComponent},
     {
         path: 'admin',
         component: DashboardComponent,
