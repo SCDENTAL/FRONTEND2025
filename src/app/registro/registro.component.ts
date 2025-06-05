@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../service/auth.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-registro',
@@ -17,18 +18,23 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule
   ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.scss'
 })
 export class RegistroComponent {
 
-  
+
   nombre: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+
+
+  hide: boolean = true;
+  hideConfirm: boolean = true;
 
   constructor(
     private authService: AuthService,
