@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import {MatInputModule } from '@angular/material/input'
 import Swal from 'sweetalert2';
 import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -19,18 +20,29 @@ import { RouterModule } from '@angular/router';
     FormsModule, 
     ReactiveFormsModule,
     MatInputModule,
-    RouterModule 
+    RouterModule,
+    MatIconModule
        ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
+  
+  ocultarPassword:boolean = true;
+  mostrarLoading:boolean= false;
+
+  formularioLogin!:FormGroup;
+
   email = '';
   password = '';
     
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private fb: FormBuilder
+  ) {}
 
   login() {
   if (!this.email || !this.password) {

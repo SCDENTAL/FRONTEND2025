@@ -6,7 +6,10 @@
   align-items: center;
   justify-content: center;
   
+}
 
+form{
+  color: white;
 }
 
 .logo-container {
@@ -61,7 +64,7 @@
 
   mat-card-content {
     display: flex;
-    flex-direction: column;
+    flex-direction: column;    
   }
 
   .full-width {
