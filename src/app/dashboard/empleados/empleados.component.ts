@@ -7,6 +7,7 @@ import { EmpleadosService } from '../../service/empleados.service';
 import { Empleado } from '../../interface/empleado';
 import { EmpleadosDialogComponent } from '../../dialogs/empleados-dialog/empleados-dialog.component';
 import Swal from 'sweetalert2';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -18,6 +19,7 @@ import Swal from 'sweetalert2';
     CommonModule,
     MatButtonModule,
     MatTableModule,   
+    MatIconModule
     
   ],
   providers:[EmpleadosService],
@@ -66,7 +68,7 @@ export class EmpleadosComponent implements OnInit{
     
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.rellenarTablaEmpleados(); // Solo recarga la tabla
+          this.rellenarTablaEmpleados();
         }
       });
     }

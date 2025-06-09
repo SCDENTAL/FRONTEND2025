@@ -48,7 +48,7 @@ export class PacientesDialogComponent {
     this.obraSocialService.getObrasSociales().subscribe({
       next: (obras) => {
         this.obrasSociales = obras;
-        this.inicializarFormulario(); // Inicializa después de cargar las obras sociales
+        this.inicializarFormulario(); 
       },
       error: () => {
         Swal.fire('Error', 'No se pudieron cargar las obras sociales', 'error');
@@ -63,12 +63,7 @@ export class PacientesDialogComponent {
       dni: [this.data?.paciente?.dni || '', Validators.required],
       telefono: [this.data?.paciente?.telefono || '', Validators.required],
       email: [this.data?.paciente?.email || '', [Validators.required, Validators.email]],
-      obraSocialId: [
-        this.data?.paciente?.obraSocial
-          ? this.obtenerIdObraSocialPorNombre(this.data.paciente.obraSocial)
-          : '',
-        Validators.required
-      ]
+      obraSocialId: [this.data?.paciente?.obraSocial ? this.obtenerIdObraSocialPorNombre(this.data.paciente.obraSocial): '', Validators.required]
     });
   }
 

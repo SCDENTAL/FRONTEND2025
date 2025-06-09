@@ -1,46 +1,39 @@
-.tabla-container {
-    margin: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    overflow-x: auto;
-    align-items: center;
+.container {
+  h1 {
+    font-weight: 600;
+    color: #2e2e2e;
   }
-  
-  .boton-agregar {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
+
   table {
-    width: 100%;
-    max-width: 1200px;
-  }
-  
-  button {
-    margin-right: 8px;
-  }
-    
-  .boton-agregar button {
-    min-width: 200px;
-    height: 48px;
-    font-size: 16px;
-    border-radius: 12px;
-  }
-    
-  @media (max-width: 600px) {
-    .tabla-container {
-      margin: 16px;
+    th.mat-header-cell {
+      font-weight: 600;
+      color: #424242;
     }
-  
-    .boton-agregar {
-      justify-content: center;
+
+    td.mat-cell {
+      font-size: 0.95rem;
     }
-  
-    .boton-agregar button {
-      width: 100%;
-      max-width: 300px;
+
+    .mat-elevation-z20 {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .mat-row:hover {
+      background-color: #f5f5f5;
+    }
+
+    button {
+      font-size: 0.85rem;
     }
   }
-  
+
+  .mat-elevation-z20 {
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .gap-1 {
+    gap: 0.5rem;
+  }
+}

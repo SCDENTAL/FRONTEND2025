@@ -8,6 +8,5 @@ export interface Paciente {
     dni: number;
     telefono: number;
     email: string;     
-    obraSocial: string; 
-    // obraSocialId?: ObraSocial[];   
+    obraSocial: string;     
 }

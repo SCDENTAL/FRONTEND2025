@@ -1,31 +1,50 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Turno } from '../interface/turno';
-import { environment } from '../../environments/environment';
+import { TurnoDetalleDTO } from '../interface/TurnoDTO/TurnoDetalleDTO';
+import { CrearTurnoDTO } from '../interface/TurnoDTO/CrearTurnoDTO';
+import { EditarTurnoDTO } from '../interface/TurnoDTO/EditarTurnoDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnosService {
+  private baseUrl = 'https://localhost:7292/api/Turno';
 
-  private apiUrl = `${environment.apiUrl}/turno`;
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
 
   constructor(private http: HttpClient) {}
 
-  getTurnos(): Observable<Turno[]> {
-    return this.http.get<Turno[]>(this.apiUrl);
+  // ✅ Cambiado para usar el endpoint correcto
+  getTurnos(): Observable<TurnoDetalleDTO[]> {
+    return this.http.get<TurnoDetalleDTO[]>(`${this.baseUrl}/mi-calendario`, this.httpOptions);
   }
 
-  crearTurno(turno: any): Observable<any> {
-    return this.http.post(this.apiUrl, turno);
+  getTurno(id: number): Observable<TurnoDetalleDTO> {
+    return this.http.get<TurnoDetalleDTO>(`${this.baseUrl}/${id}`, this.httpOptions);
   }
 
-  actualizarTurno(turnoId: number, turno: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${turnoId}`, turno);
+  crearTurno(calendarioId: number, turno: CrearTurnoDTO): Observable<any> {
+    return this.http.post(`${this.baseUrl}/crear/${calendarioId}`, turno, this.httpOptions);
   }
 
-  eliminarTurno(turnoId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${turnoId}`);
+  editarTurno(id: number, turno: EditarTurnoDTO): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, turno, this.httpOptions);
+  }
+
+  cancelarTurno(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}/cancelar`, {}, this.httpOptions);
+  }
+
+  marcarAsistencia(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}/asistencia`, {}, this.httpOptions);
+  }
+
+  reservarTurno(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reservar/${id}`, {}, this.httpOptions);
   }
 }
