@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { PacientesDialogComponent } from '../../dialogs/pacientes-dialog/pacientes-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-pacientes',
@@ -17,11 +18,12 @@ import { PacientesDialogComponent } from '../../dialogs/pacientes-dialog/pacient
     CommonModule,
     MatButtonModule,
     MatTableModule,
+    MatIconModule
   ]
 })
 export class PacientesComponent implements OnInit {
 
-  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'telefono', 'email', 'opciones'];
+  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'telefono', 'email','obraSocial', 'opciones'];
   
   pacientes: Paciente[] = [];
 
@@ -52,7 +54,7 @@ export class PacientesComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.cargarPacientes(); // Solo recarga la tabla, no muestra Swal
+        this.cargarPacientes(); 
       }
     });
   }
@@ -62,7 +64,7 @@ export class PacientesComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.cargarPacientes(); // Solo recarga la tabla
+        this.cargarPacientes(); 
       }
     });
   }

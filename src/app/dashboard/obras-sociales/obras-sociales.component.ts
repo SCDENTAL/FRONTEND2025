@@ -7,13 +7,14 @@ import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { ObraSocialDialogComponent } from '../../dialogs/obra-social-dialog/obra-social-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-obras-sociales',
   standalone: true,
   templateUrl: './obras-sociales.component.html',
   styleUrls: ['./obras-sociales.component.scss'],
-  imports: [CommonModule, MatButtonModule, MatTableModule],
+  imports: [CommonModule, MatButtonModule, MatTableModule, MatIconModule],
 })
 export class ObrasSocialesComponent implements OnInit {
   displayedColumns: string[] = ['nombre', 'opciones'];

@@ -1,46 +1,48 @@
-.tabla-container {
-    margin: 24px;
-    display: flex;
+:host {
+  display: block;
+  width: 100%;
+}
+
+table {
+  th, td {
+    padding: 0.75rem 1rem;
+    word-wrap: break-word;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+  }
+
+  td {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mat-elevation-z20 {
+    font-size: 0.9rem;
+  }
+
+  table th, table td {
+    padding: 0.5rem;
+  }
+
+  button[mat-button] {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mat-elevation-z20 {
+    font-size: 0.85rem;
+  }
+
+  .d-flex.flex-wrap {
     flex-direction: column;
-    gap: 24px;
-    overflow-x: auto;
-    align-items: center;
+    align-items: stretch;
+    gap: 0.25rem;
   }
-  
-  .boton-agregar {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  table {
-    width: 100%;
-    max-width: 1200px;
-  }
-  
-  button {
-    margin-right: 8px;
-  }
-    
-  .boton-agregar button {
-    min-width: 200px;
-    height: 48px;
-    font-size: 16px;
-    border-radius: 12px;
-  }
-    
-  @media (max-width: 600px) {
-    .tabla-container {
-      margin: 16px;
-    }
-  
-    .boton-agregar {
-      justify-content: center;
-    }
-  
-    .boton-agregar button {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-  
+}
