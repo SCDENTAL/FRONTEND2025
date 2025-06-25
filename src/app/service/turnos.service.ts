@@ -18,8 +18,7 @@ export class TurnosService {
   };
 
   constructor(private http: HttpClient) {}
-
-  // ✅ Cambiado para usar el endpoint correcto
+  
   getTurnos(): Observable<TurnoDetalleDTO[]> {
     return this.http.get<TurnoDetalleDTO[]>(`${this.baseUrl}/mi-calendario`, this.httpOptions);
   }
@@ -47,4 +46,6 @@ export class TurnosService {
   reservarTurno(id: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/reservar/${id}`, {}, this.httpOptions);
   }
+
+  
 }

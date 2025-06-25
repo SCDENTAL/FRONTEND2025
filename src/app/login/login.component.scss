@@ -1,106 +1,136 @@
-.login-container {
+.login-page {
+  display: flex;
   height: 100vh;
   width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
+  overflow: hidden;
 
-}
+  .estudio {
+    flex: 1;
+    display: block;
 
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
- 
-
-  .logo {
-    max-width: 100px;
-    height: auto;
-  }
-}
-
-.imagen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-bottom: 20px;
-
-  max-width: 100%;
-  height: auto;
-}
-
-.logo {
-  max-height: 200px;
-  max-width: 200px;
-}
-
-
-
-.login-card {
-  padding: 25px;
-  
-  width: 350px;
-  max-width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  
-  background-color: black;
-  
-
-  mat-card-title {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
-  mat-card-content {
+
+  .caja-botones {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
 
-    
   }
 
-  .full-width {
-    width: 100%;
+  .botones {
+
+    font-size: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #56a1f7;
+    }
+
+
   }
 
-  button {
+  .login-container {
 
-    height: 30px;
-    width: 100%;
+
+    flex: 1;
+    background-color: #000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+
+
+    background-color: white;
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      background-color: whitesmoke;
+      color: black;
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+
+        .logo {
+          max-width: 200px;
+          height: auto;
+        }
+      }
+
+      mat-card-content {
+
+        max-width: 100%;
+        height: auto;
+      }
+
+      mat-form-field {
+        width: 100%;
+        margin-bottom: 20px;
+        color: white;
+
+
+        .mat-form-field-infix {
+          color: white;
+        }
+
+        .mat-input-element {
+          color: white;
+        }
+
+        .mat-form-field-label {
+          color: white;
+        }
+
+        .mat-form-field-outline {
+          color: white !important;
+          border-color: white !important;
+        }
+      }
+    }
   }
-}
 
 
-
-@media (max-width: 768px) {
-  .login-card {
-    width: 90%;
-    padding: 15px;
-  }
-
-  .logo-container .logo {
-    width: 150px;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-card {
+  .eye-icon {
     padding: 10px;
+    margin-top: 6px;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+
+    mat-icon {
+      font-size: 20px;
+      color: black;
+    }
   }
 
-  mat-card-title {
-    font-size: 20px;
-  }
 
-  .logo-container .logo {
-    width: 120px;
+  @media (max-width: 768px) {
+    
+
+      .estudio {
+        display: none;
+      }
+
+     
+    }
   }
-}

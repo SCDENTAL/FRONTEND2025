@@ -1,0 +1,56 @@
+<div class="contenedor-dialog">
+  <div class="header-dialog">
+    <h1 class="title">Crear Calendario</h1>
+  </div>
+
+  <div *ngIf="mostrarFormulario" class="body-dialog">
+    <form [formGroup]="calendarioForm" class="form-container" (ngSubmit)="guardar()">
+      <div class="input-group">
+
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput [matDatepicker]="picker1" formControlName="fechaInicio" />
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha Fin</mat-label>
+          <input matInput [matDatepicker]="picker2" formControlName="fechaFin" />
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hora inicio</mat-label>
+          <input matInput formControlName="horaInicioTurnos" placeholder="09:00" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hora fin</mat-label>
+          <input matInput formControlName="horaFinTurnos" placeholder="19:00" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Intervalo</mat-label>
+          <input matInput formControlName="intervaloTurnos" placeholder="00:15" />
+        </mat-form-field>
+      </div>
+
+      <div class="checkbox-group">
+        <mat-checkbox formControlName="excluirDomingo">Excluir Domingo</mat-checkbox>
+      </div>
+    </form>
+  </div>
+
+  <div class="footer-dialog">
+    <button mat-stroked-button color="warn" (click)="cancelar()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="enviarCalendario()" [disabled]="calendarioForm.invalid">Guardar</button>
+  </div>
+</div>

@@ -28,13 +28,13 @@ export class DashboardComponent {
   constructor(private router : Router){}
 
   logout() {
-    localStorage.removeItem('token'); // Borra el token
-    this.router.navigate(['/login']); // Redirige al login
+    localStorage.removeItem('token'); 
+    this.router.navigate(['/login']); 
   }
 
   @ViewChild('drawer') drawer!: MatSidenav;
 
-  sidenavMode: 'side' | 'over' = 'side'; // ← inicialmente desktop
+  sidenavMode: 'side' | 'over' = 'side'; 
   sidenavOpened = true;
 
 

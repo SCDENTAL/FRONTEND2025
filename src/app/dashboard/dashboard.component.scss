@@ -3,39 +3,96 @@
 }
 
 .sidenav {
-  width: 250px;
+  width: 300px;
+  padding: 0;
+  background-color: #f8f9fa;
 }
 
-.sidenav-content {
+
+.nav-link {
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  align-items: center;
+
+  height: 50px;
+  padding: 0 1rem;
+
+  font-size: 19px;
+  color: #333;
+  text-decoration: none;
+
+  .emoji {
+    margin-right: 12px;
+    font-size: 22px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  span {
+    line-height: 1;
+  }
+
+  &.active {
+    background-color: rgba(0, 123, 255, 0.1);
+    font-weight: 600;
+  }
+}
+
+
+
+
+.logout-container {
+  padding: 1rem;
+
+  .logout-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 600;
+    color: #dc3545;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.1);
+    }
+  }
 }
 
 .main-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  padding: 0 16px;
-
-  .menu-button {
-    margin-right: 16px;
-  }
+  
+  padding: 0 1rem;
 
   .app-title {
     font-size: 20px;
     font-weight: bold;
-    color: white;
+    color: black;
   }
 }
 
-.main-content {
-  flex-grow: 1;
-  padding: 16px;
-}
+@media (max-width: 768px) {
+  .nav-items a.nav-link {
+    font-size: 20px;
+    justify-content: flex-start; 
+    gap: 9px;     
+  }
 
-@media (min-width: 769px) {
-  .menu-button {
-    display: none;
+  .emoji {
+    display: inline-block;
+  }
+
+  .label {
+    display: inline-block;
+  }
+
+  .logout-button {
+    justify-content: flex-start;
+
+    .emoji,
+    .label {
+      display: inline-block;
+    }
   }
 }

@@ -1,50 +1,60 @@
-¿<div class="login-container">
-  <mat-card class="login-card">
-    <div class="imagen">
-      <img class="logo" src="assets/logo.png" alt="logo">
-    </div>
-
-    <mat-card-title>Registrarse</mat-card-title>
-
-    <mat-card-content>
-      <form>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput type="text" [(ngModel)]="nombre" name="nombre" required />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="email" name="email" required />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Contraseña</mat-label>
-          
-          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" name="password" required />
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Mostrar u ocultar contraseña'"
-            [attr.aria-pressed]="!hide">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
+<div class="login-page">
+  <div class="estudio">
+    <img src="assets/studio.jpg" alt="estudio">
+  </div>
 
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Confirmar Contraseña</mat-label>
-          <input matInput [type]="hideConfirm ? 'password' : 'text'" [(ngModel)]="confirmPassword"
-            name="confirmPassword" required />
-          <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm"
-            [attr.aria-label]="'Mostrar u ocultar contraseña'" [attr.aria-pressed]="!hideConfirm">
-            <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
+  <div class="login-container">
+    <mat-card class="login-card">
+      <div class="logo-container">
+        <img class="logo" src="assets/logob.png" alt="logo">
+      </div>
 
-        <button mat-raised-button color="primary" (click)="registrar()">Registrarse</button>
+      <mat-card-content>
+        <form>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput type="text" [(ngModel)]="nombre" name="nombre" required />
+          </mat-form-field>
 
-        <button mat-button color="accent" (click)="irALogin()" style="margin-top: 10px;">
-          ¿Ya tenés cuenta? Iniciá sesión
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email" name="email" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+
+            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" name="password" required />
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Mostrar u ocultar contraseña'"
+              [attr.aria-pressed]="!hide" class="eye-icon">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Confirmar Contraseña</mat-label>
+            <input matInput [type]="hideConfirm ? 'password' : 'text'" [(ngModel)]="confirmPassword"
+              name="confirmPassword" required />
+            <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm"
+              [attr.aria-label]="'Mostrar u ocultar contraseña'" [attr.aria-pressed]="!hideConfirm" class="eye-icon">
+              <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+
+
+          <div class="caja-botones">
+            <button class="botones" (click)="registrar()">Registrarse</button>
+
+            <button class="botones" (click)="irALogin()" style="margin-top: 10px;">
+              ¿Ya tenés cuenta? Iniciá sesión
+            </button>
+
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
 </div>

@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Nuevo Turno</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Paciente</mat-label>
+    <input matInput formControlName="nombrePaciente" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Odontologo</mat-label>
+    <input matInput formControlName="obraSocialId" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Obra Social</mat-label>
+    <mat-select formControlName="obraSocialId" required>
+      <mat-option *ngFor="let obra of obrasSociales" [value]="obra.id">
+        {{ obra.nombre }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="obraSocialId?.invalid && (obraSocialId?.dirty || obraSocialId?.touched)">
+      La obra social es obligatoria
+    </mat-error>
+  </mat-form-field>
+
+  <div class="acciones">
+    <button mat-raised-button color="primary" type="submit">Guardar</button>
+    <button mat-button (click)="cancelar()">Cancelar</button>
+  </div>
+</form>

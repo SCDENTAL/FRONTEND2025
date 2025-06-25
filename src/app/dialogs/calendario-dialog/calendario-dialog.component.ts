@@ -1,107 +1,118 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { EmpleadosService } from '../../service/empleados.service';
-import { PacienteService } from '../../service/paciente.service';
-import { ObraSocialService } from '../../service/obra-social.service';
-import { Empleado } from '../../interface/empleado';
-import { Paciente } from '../../interface/paciente';
-import { ObraSocial } from '../../interface/obra-social';
-import { CrearTurno } from '../../interface/crear-turno';
-import { MatSelectModule } from '@angular/material/select';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CalendarioService } from '../../service/calendario.service';
+import { CrearCalendarioDTO } from '../../interface/CalendarioDTO/crearcalendariodto';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-calendario-dialog',
+  standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogActions,
-    MatOptionModule,
-    MatDialogModule,
-    MatSelectModule,
-    ReactiveFormsModule
+    MatIconModule,
+    MatCheckboxModule
+
   ],
   templateUrl: './calendario-dialog.component.html',
-  styleUrl: './calendario-dialog.component.scss'
+  styleUrl: './calendario-dialog.component.scss',
+
 })
-export class CalendarioDialogComponent {
+export class CalendarioDialogComponent implements AfterViewInit {
+
+
+  calendarioForm: FormGroup;
+  mostrarFormulario = false;
   
-  odontologos: Empleado[] = [];
-  pacientes: Paciente[] = [];
-  obrasSociales: ObraSocial[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<CalendarioDialogComponent>,
+    private cdRef: ChangeDetectorRef,
+    private calendarioService : CalendarioService,
+  ) {
+    this.calendarioForm = this.fb.group({
+      nombre: ['', Validators.required],
+      fechaInicio: ['', Validators.required],
+      fechaFin: ['', Validators.required],
+      horaInicioTurnos: ['', Validators.required],
+      horaFinTurnos: ['', Validators.required],
+      intervaloTurnos: ['', Validators.required],
+      excluirDomingo: [false]
+    });
+
+  }
+
+  ngAfterViewInit(): void {    
+    setTimeout(() => {
+      this.mostrarFormulario = true;
+      this.cdRef.detectChanges();
+    });    
+    setTimeout(() => {
+      this.mostrarFormulario = true;
+      this.cdRef.detectChanges();
+    }, 0);
+  }
+
+ guardar(): void {
+  if (this.calendarioForm.valid) {
+    const datos = this.calendarioForm.value;
+    this.dialogRef.close(datos);
+  }
+}
+
+   enviarCalendario(): void {
+    const formValue = this.calendarioForm.value;
+
+    const parseHora = (valor: string) => {
+      const partes = valor.split(':');
+      return Number(partes[0]) + (Number(partes[1] || 0) / 60);
+    };
+
+    const dto: CrearCalendarioDTO = {
+      nombre: formValue.nombre,
+      fechaInicio: new Date(formValue.fechaInicio).toISOString(),
+      fechaFin: new Date(formValue.fechaFin).toISOString(),
+      horaInicioTurnos: parseHora(formValue.horaInicioTurnos),
+      horaFinTurnos: parseHora(formValue.horaFinTurnos),
+      intervaloTurnos: parseInt(formValue.intervaloTurnos.split(':')[1] || formValue.intervaloTurnos),
+      excluirDomingo: formValue.excluirDomingo
+    };
+
+    this.calendarioService.crearCalendario(dto).subscribe({
+      next: (nuevoCalendario) => {
+        Swal.fire('Calendario creado');
+        this.dialogRef.close(nuevoCalendario); 
+      },
+      error: (err) => {        
+        Swal.fire('Error al crear calendario');
+      }
+    });
+  }
 
 
-
-constructor(private odontologoService: EmpleadosService,
-            private pacienteService : PacienteService,
-            private obrasSocialesService: ObraSocialService
-){
-
+  cancelar(): void {
+    this.dialogRef.close();
+  }
 }
 
 
-  private datosCargados = {
-    odontologos: false,
-    pacientes: false,
-    obrasSociales: false
-  };
-  
-  ngOnInit() {
-    this.cargarOdontologos();
-    this.cargarPacientes();
-    this.cargarObrasSociales();
-  }
-  
-  private cargarOdontologos() {
-    this.odontologoService.getEmpleados().subscribe({
-      next: data => {
-        this.odontologos = data;
-        this.datosCargados.odontologos = true;
-        this.verificarCargaCompleta();
-      }
-    });
-  }
-  
-  private cargarPacientes() {
-    this.pacienteService.getPacientes().subscribe({
-      next: data => {
-        this.pacientes = data;
-        this.datosCargados.pacientes = true;
-        this.verificarCargaCompleta();
-      }
-    });
-  }
-  
-  private cargarObrasSociales() {
-    this.obrasSocialesService.getObrasSociales().subscribe({
-      next: data => {
-        this.obrasSociales = data;
-        this.datosCargados.obrasSociales = true;
-        this.verificarCargaCompleta();
-      }
-    });
-  }
-  
-  private verificarCargaCompleta() {
-    if (this.datosCargados.odontologos && this.datosCargados.pacientes && this.datosCargados.obrasSociales) {
-      this.inicializarFormulario();
-    }
-  }
 
-  
-  inicializarFormulario() {
-    throw new Error('Method not implemented.');
-  }
 
-}
+
+
