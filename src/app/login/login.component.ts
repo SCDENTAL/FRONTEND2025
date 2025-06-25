@@ -28,8 +28,13 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class LoginComponent {
 
+
+  passwordVisible = false;
+
+
+
   
-  ocultarPassword:boolean = true;
+  
   mostrarLoading:boolean= false;
 
   formularioLogin!:FormGroup;
@@ -43,6 +48,11 @@ export class LoginComponent {
     private router: Router,
     private fb: FormBuilder
   ) {}
+
+  togglePasswordVisibility(): void {
+  this.passwordVisible = !this.passwordVisible;
+}
+
 
   login() {
   if (!this.email || !this.password) {

@@ -59,7 +59,7 @@ export class EmpleadosDialogComponent {
     });
   }
 
-  
+
 
   onCancel(): void {
     this.dialogRef.close(false);

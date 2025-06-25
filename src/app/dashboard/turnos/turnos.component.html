@@ -1,10 +1,25 @@
+<div class="container d-flex flex-column justify-content-start align-items-center min-vh-100">
+  <h1 class="text-dark mt-5 fs-2">CALENDARIO</h1>
 
-<div class="boton">
-  <!-- Acá me gustaría poner el boton para crear el calendario. -->
-</div>
+  <div class="col-12 col-lg-10 mt-4 d-flex flex-column align-items-center">
+    <div class="w-100 mb-3 d-flex justify-content-end gap-2">
+      <button mat-raised-button color="primary" (click)="abrirDialogoCrearCalendario()">
+        <mat-icon class="me-1">add</mat-icon>
+        Agregar Calendario
+      </button>
 
+      <button mat-raised-button color="warn" (click)="eliminarCalendario()" [disabled]="!calendario"> 
+        <mat-icon class="me-1">delete</mat-icon>
+        Eliminar Calendario
+      </button>
+    </div>
 
+    <div class="calendario" *ngIf="calendario; else sinCalendarioTpl">
+      <app-calendario></app-calendario>
+    </div>
 
-<div class="calendario" *ngIf="true"> <!-- cambiar por bandera si hace falta -->
-  <app-calendario></app-calendario>
+    <ng-template #sinCalendarioTpl>
+      <p class="text-muted">No hay calendario cargado.</p>
+    </ng-template>
+  </div>
 </div>

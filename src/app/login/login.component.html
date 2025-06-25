@@ -1,51 +1,87 @@
+<!-- <div class="login-page">
+  <div class="estudio">
+    <img src="assets/studio.jpg" alt="estudio">
+  </div>
 
+  <div class="login-container">
+    <mat-card class="login-card">
+      <div class="logo-container">
+        <img class="logo" src="assets/logob.png" alt="logo">
+      </div>
 
+      <mat-card-content>
+        <form>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email" name="email" required />
+          </mat-form-field>
 
-<div class="login-container">
-  
-  <mat-card class="login-card">
-    
-    <div class="imagen">
-      
-      <img class="logo" src="assets/logo.png" alt="logo">
-    
-    </div>
+          <mat-form-field appearance="outline" class="full-width" color="primary">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" name="password"
+              required />
+            <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="'Mostrar/ocultar contraseña'" [attr.aria-pressed]="passwordVisible" type="button" class="eye-icon">
+              <mat-icon>{{ passwordVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
 
-    <mat-card-content>
+          <div class="caja-botones">
+          <button class="botones" (click)="login()">Login</button>
 
-      <form>
+          <button class="botones" (click)="irARegistro()">¿No tenés cuenta? Registrate</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div> -->
 
-        <div class="inputs">
+<div class="login-page">
+  <div class="estudio">
+    <img src="assets/studio.jpg" alt="estudio" />
+  </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="email" name="email" required />
-        </mat-form-field>
+  <div class="login-container">
+    <mat-card class="login-card">
+      <div class="logo-container">
+        <img class="logo" src="assets/logob.png" alt="logo" />
+      </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Contraseña</mat-label>
-          <input matInput type="password" [(ngModel)]="password" name="password" required />
-        </mat-form-field>
+      <mat-card-content>
+        <form>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email" name="email" required />
+          </mat-form-field>
 
-        </div>
+          <mat-form-field appearance="outline" class="full-width" color="primary">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              [type]="passwordVisible ? 'text' : 'password'"
+              [(ngModel)]="password"
+              name="password"
+              required
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Mostrar/ocultar contraseña'"
+              [attr.aria-pressed]="passwordVisible"
+              type="button"
+              class="eye-icon"
+            >
+              <mat-icon>{{ passwordVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
 
-        <div class="botones"> 
-
-        <button mat-raised-button color="primary" (click)="login()">Login</button>
-
-        <button mat-button color="accent" (click)="irARegistro()" style="margin-top: 10px;">
-          ¿No tenés cuenta? Registrate
-        </button>
-
-        </div>
-
-      </form>
-
-    </mat-card-content>
-
-  </mat-card>
+          <div class="caja-botones">
+            <button class="botones" (click)="login()">Login</button>
+            <button class="botones secundario" (click)="irARegistro()">¿No tenés cuenta? Registrate</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
-
-
-    
-
