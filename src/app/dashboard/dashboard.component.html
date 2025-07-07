@@ -1,27 +1,24 @@
 <mat-sidenav-container class="sidenav-container d-flex">
   <mat-sidenav #drawer class="sidenav" [mode]="sidenavMode" [opened]="sidenavOpened">
     <div class="d-flex flex-column h-100 justify-content-between">
-
-
-  <div class="nav-items">
-  <a class="nav-link" routerLink="turnos" routerLinkActive="active" (click)="closeDrawer()">
-    <span class="emoji">📅</span>
-    <span>Turnos</span>
-  </a>
-  <a class="nav-link" routerLink="pacientes" routerLinkActive="active" (click)="closeDrawer()">
-    <span class="emoji">👥</span>
-    <span>Pacientes</span>
-  </a>
-  <a class="nav-link" routerLink="odontologos" routerLinkActive="active" (click)="closeDrawer()">
-    <span class="emoji">🦷</span>
-    <span>Odontólogos</span>
-  </a>
-  <a class="nav-link" routerLink="obras-sociales" routerLinkActive="active" (click)="closeDrawer()">
-    <span class="emoji">📄</span>
-    <span>Obras Sociales</span>
-  </a>
-</div>
-    
+      <div class="nav-items">
+        <a class="nav-link" routerLink="turnos" routerLinkActive="active" (click)="closeDrawer()">
+          <span class="emoji">📅</span>
+          <span>Turnos</span>
+        </a>
+        <a class="nav-link" routerLink="pacientes" routerLinkActive="active" (click)="closeDrawer()">
+          <span class="emoji">👥</span>
+          <span>Pacientes</span>
+        </a>
+        <a class="nav-link" routerLink="odontologos" routerLinkActive="active" (click)="closeDrawer()">
+          <span class="emoji">🦷</span>
+          <span>Odontólogos</span>
+        </a>
+        <a class="nav-link" routerLink="obras-sociales" routerLinkActive="active" (click)="closeDrawer()">
+          <span class="emoji">📄</span>
+          <span>Obras Sociales</span>
+        </a>
+      </div>
 
       <div class="logout-container">
         <button mat-button class="logout-button" (click)="logout(); closeDrawer()">
@@ -37,7 +34,7 @@
       <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="app-title">Panel Admin</span>
+      <span class="app-title">Panel del administrador.</span>
     </mat-toolbar>
 
     <div class="main-content p-3">

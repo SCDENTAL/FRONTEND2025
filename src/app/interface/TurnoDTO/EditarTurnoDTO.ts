@@ -1,6 +1,5 @@
 export interface EditarTurnoDTO {
-  idPaciente: number;
-  odontologoId: number;
-  idObraSocial: number;
-  fechaHora: string;
+  IdPaciente: number;
+  IdOdontologo: number;
+  IdObraSocial: number;
 }

@@ -8,14 +8,11 @@
   background-color: #f8f9fa;
 }
 
-
 .nav-link {
   display: flex;
   align-items: center;
-
   height: 50px;
   padding: 0 1rem;
-
   font-size: 19px;
   color: #333;
   text-decoration: none;
@@ -36,9 +33,6 @@
     font-weight: 600;
   }
 }
-
-
-
 
 .logout-container {
   padding: 1rem;
@@ -62,7 +56,6 @@
 }
 
 .main-toolbar {
-  
   padding: 0 1rem;
 
   .app-title {
@@ -72,11 +65,19 @@
   }
 }
 
+.menu-button {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: inline-flex;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-items a.nav-link {
     font-size: 20px;
-    justify-content: flex-start; 
-    gap: 9px;     
+    justify-content: flex-start;
+    gap: 9px;
   }
 
   .emoji {

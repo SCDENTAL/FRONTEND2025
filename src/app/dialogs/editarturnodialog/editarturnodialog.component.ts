@@ -1,37 +1,32 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ObraSocial } from '../../interface/obra-social';
+import { Paciente } from '../../interface/paciente';
+import { odontologoDetalle } from '../../interface/odontologodetalle';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PacienteService } from '../../service/paciente.service';
+import { EmpleadosService } from '../../service/empleados.service';
+import { ObraSocialService } from '../../service/obra-social.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { CommonModule } from '@angular/common';
 
-import { ObraSocial } from '../../interface/obra-social';
-import { Paciente } from '../../interface/paciente';
-import { odontologoDetalle } from '../../interface/odontologodetalle';
-import { ReservarTurnoDTO } from '../../interface/TurnoDTO/ReservarTurnoDTO';
 
-import { EmpleadosService } from '../../service/empleados.service';
-import { PacienteService } from '../../service/paciente.service';
-import { ObraSocialService } from '../../service/obra-social.service';
 
 @Component({
-  selector: 'app-crearturnodialog',
-  standalone: true,
-  imports: [
-    CommonModule,
+  selector: 'app-editarturnodialog',
+  imports: [   CommonModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './crearturnodialog.component.html',
-  styleUrl: './crearturnodialog.component.scss'
+    ReactiveFormsModule],
+  templateUrl: './editarturnodialog.component.html',
+  styleUrl: './editarturnodialog.component.scss'
 })
-export class CrearturnodialogComponent implements OnInit {
-
+export class EditarturnodialogComponent implements OnInit {
   obrasSociales: ObraSocial[] = [];
   pacientes: Paciente[] = [];
   odontologos: odontologoDetalle[] = [];
@@ -43,13 +38,17 @@ export class CrearturnodialogComponent implements OnInit {
     private pacientesService: PacienteService,
     private empleadosService: EmpleadosService,
     private obraSociales: ObraSocialService,
-    private dialogRef: MatDialogRef<CrearturnodialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { fechaHora: Date, turno?: ReservarTurnoDTO }
+    private dialogRef: MatDialogRef<EditarturnodialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      pacienteId: number,
+      odontologoId: number,
+      obraSocialId: number
+    }
   ) {
     this.form = this.fb.group({
-      pacienteId: ['', Validators.required],
-      odontologoId: ['', Validators.required],
-      obraSocialId: ['', Validators.required],
+      pacienteId: [data.pacienteId, Validators.required],
+      odontologoId: [data.odontologoId, Validators.required],
+      obraSocialId: [data.obraSocialId, Validators.required],
     });
   }
 
@@ -62,20 +61,21 @@ export class CrearturnodialogComponent implements OnInit {
   guardar(): void {
     if (this.form.valid) {
       const resultado = {
-        ...this.form.value,
-        fechaHora: this.data.fechaHora
+        editar: true,
+        ...this.form.value
       };
       this.dialogRef.close(resultado);
     }
   }
 
-
-
   cancelar(): void {
-    this.dialogRef.close();
-  }
+  this.dialogRef.close({ cancelar: true });
+}
+  
 
   get obraSocialId() { return this.form.get('obraSocialId'); }
   get pacienteId() { return this.form.get('pacienteId'); }
   get odontologoId() { return this.form.get('odontologoId'); }
 }
+
+

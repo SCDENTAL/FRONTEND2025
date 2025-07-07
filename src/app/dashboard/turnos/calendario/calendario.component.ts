@@ -2,16 +2,36 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import moment from 'moment';
+import 'moment/locale/es';
 import { Turno } from '../../../interface/turno';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TurnosService } from '../../../service/turnos.service';
 import { CalendarioService } from '../../../service/calendario.service';
 import { CalendarioDTO } from '../../../interface/CalendarioDTO/calendariodto';
+import { MatDialog } from '@angular/material/dialog';
+import { CrearturnodialogComponent } from '../../../dialogs/crearturnodialog/crearturnodialog.component';
+import { ReservarTurnoDTO } from '../../../interface/TurnoDTO/ReservarTurnoDTO';
+import Swal from 'sweetalert2';
+import { EditarturnodialogComponent } from '../../../dialogs/editarturnodialog/editarturnodialog.component';
+import { EditarTurnoDTO } from '../../../interface/TurnoDTO/EditarTurnoDTO';
+import { DetalleturnodialogComponent } from '../../../dialogs/detalleturnodialog/detalleturnodialog.component';
+import { Paciente } from '../../../interface/paciente';
+import { odontologoDetalle } from '../../../interface/odontologodetalle';
+import { ObraSocial } from '../../../interface/obra-social';
+import { PacienteService } from '../../../service/paciente.service';
+import { EmpleadosService } from '../../../service/empleados.service';
+import { ObraSocialService } from '../../../service/obra-social.service';
+import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { TurnoOdontologo } from '../../../interface/turno-odontologo';
 
 @Component({
   selector: 'app-calendario',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule, 
+    MatProgressSpinnerModule,
+    MatCheckboxModule
+  ],
   templateUrl: './calendario.component.html',
   styleUrl: './calendario.component.scss'
 })
@@ -20,16 +40,29 @@ export class CalendarioComponent implements OnInit {
   diasSemana: string[] = [];
   horarios: string[] = [];
   turnos: Turno[] = [];
+  turnosMap: { [key: string]: Turno } = {};
   calendario!: CalendarioDTO;
 
+  pacientes: Paciente[] = [];
+  odontologos: odontologoDetalle[] = [];
+  obrasSociales: ObraSocial[] = [];
+
   cargando: boolean = true;
-  inicioSemana: moment.Moment = moment().startOf('week').add(1, 'day');
+
+  inicioSemana: moment.Moment = moment().isoWeekday(1); 
 
   constructor(
     private http: HttpClient,
     private turnosService: TurnosService,
-    private calendarioService: CalendarioService
-  ) {}
+    private calendarioService: CalendarioService,
+    private dialog: MatDialog,
+    private pacientesService: PacienteService,
+    private empleadosService: EmpleadosService,
+    private obraSocialService: ObraSocialService
+  ) {
+    moment.locale('es');
+    moment.updateLocale('es', { week: { dow: 1 } });
+  }
 
   ngOnInit(): void {
     this.calendarioService.obtenerCalendarios().subscribe({
@@ -40,20 +73,22 @@ export class CalendarioComponent implements OnInit {
           this.generarHorarios();
           this.obtenerTurnos();
         } else {
-          console.warn('No se encontró ningún calendario para el usuario');
           this.cargando = false;
         }
       },
-      error: (error) => {        
-        this.cargando = false;
-      }
+      error: () => this.cargando = false
     });
+
+    this.pacientesService.getPacientes().subscribe(res => this.pacientes = res);
+    this.empleadosService.getEmpleados().subscribe(res => this.odontologos = res);
+    this.obraSocialService.getObrasSociales().subscribe(res => this.obrasSociales = res);
   }
 
   actualizarCalendario(): void {
     this.diasSemana = [];
     for (let i = 0; i < 7; i++) {
-      this.diasSemana.push(this.inicioSemana.clone().add(i, 'days').format('dddd DD/MM'));
+      const dia = this.inicioSemana.clone().add(i, 'days').format('dddd DD/MM');
+      this.diasSemana.push(dia.charAt(0).toUpperCase() + dia.slice(1)); // Capitaliza
     }
   }
 
@@ -71,52 +106,202 @@ export class CalendarioComponent implements OnInit {
   }
 
   obtenerTurnos(): void {
-    this.turnosService.getTurnos().subscribe({
-      next: (turnos) => {        
-        this.turnos = Array.isArray(turnos) ? turnos : [];
+    const fechaInicioSemana = this.inicioSemana.clone().startOf('day').toISOString();
+    const fechaFinSemana = this.inicioSemana.clone().add(6, 'days').endOf('day').toISOString();
+
+    this.cargando = true;
+    this.turnosService.getTurnosPorSemana(this.calendario.id, fechaInicioSemana, fechaFinSemana).subscribe({
+      next: (turnos) => {
+        this.turnos = turnos || [];
+        this.actualizarTurnosMap();
         this.cargando = false;
       },
-      error: (error) => {        
+      error: (error) => {
+        console.error('Error al cargar turnos de la semana:', error);
         this.cargando = false;
       }
     });
   }
 
-  obtenerTurno(dia: string, hora: string): Turno | undefined {
-    const fecha = moment(dia.split(' ')[1], 'DD/MM');
-    const año = moment(this.calendario.fechaInicio).year();
-
-    const fechaHora = fecha.set({
-      hour: parseInt(hora.split(':')[0]),
-      minute: parseInt(hora.split(':')[1]),
-      second: 0,
-      year: año
+  actualizarTurnosMap(): void {
+    this.turnosMap = {};
+    this.turnos.forEach(turno => {
+      const fechaStr = moment(turno.fecha).format('DD/MM');
+      const horaStr = moment(turno.horario, 'HH:mm:ss').format('HH:mm');
+      const key = `${fechaStr}_${horaStr}`;
+      this.turnosMap[key] = turno;
     });
+  }
 
-    return this.turnos.find(t => moment(t.fechaHora).isSame(fechaHora, 'minute'));
+  getTurnoMap(dia: string, hora: string): Turno | undefined {
+    const fechaStr = dia.split(' ')[1];
+    const key = `${fechaStr}_${hora}`;
+    return this.turnosMap[key];
   }
 
   estiloTurno(turno?: Turno): string {
-    if (!turno) return 'sin-turno turno';
-    return turno.estado === 'Reservado' ? 'turno turno-ocupado' : 'turno turno-disponible';
-  }
+  if (!turno) return 'sin-turno turno';
+  if (turno.asistio) return 'turno turno-asistido';
+  return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
+}
 
   manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
-    if (!turno) {
-      alert(`Reservar turno para el día ${fecha} a las ${hora}`);
-      // Aquí va luego el MatDialog para elegir paciente, odontólogo, obra social
-    } else {
-      alert(`Turno de ${turno.nombrePaciente} - Estado: ${turno.estado}`);
+    if (!turno) return;
+
+    if (!turno.disponible) {
+      const dialogRef = this.dialog.open(DetalleturnodialogComponent, { data: { turno } });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result?.editar) this.abrirDialogoEditarTurno(turno);
+        else if (result?.cancelar) this.cancelarTurno(turno);
+      });
+      return;
     }
+
+    const fechaSeleccionada = moment(fecha!.split(' ')[1], 'DD/MM')
+      .set({
+        hour: parseInt(hora!.split(':')[0]),
+        minute: parseInt(hora!.split(':')[1]),
+        second: 0,
+        year: moment(this.calendario.fechaInicio).year()
+      }).toDate();
+
+    const dialogRef = this.dialog.open(CrearturnodialogComponent, {
+      width: '400px',
+      data: { fechaHora: fechaSeleccionada }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const datos: ReservarTurnoDTO = {
+          IdPaciente: result.pacienteId,
+          IdOdontologo: result.odontologoId,
+          IdObraSocial: result.obraSocialId
+        };
+
+        const turnoSeleccionado = this.turnos.find(t =>
+          moment(t.fecha).isSame(moment(result.fechaHora), 'day') &&
+          moment(t.horario, 'HH:mm:ss').format('HH:mm') === moment(result.fechaHora).format('HH:mm')
+        );
+
+        if (!turnoSeleccionado) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se encontró el turno en la base de datos.',
+            confirmButtonColor: '#d33'
+          });
+          return;
+        }
+
+        this.turnosService.reservarTurno(turnoSeleccionado.id, datos).subscribe(() => {
+          this.obtenerTurnos();
+          Swal.fire({
+            title: 'Turno reservado',
+            icon: 'success',
+            showConfirmButton: false
+          });
+        }, () => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo reservar el turno.',
+            confirmButtonColor: '#d33'
+          });
+        });
+      }
+    });
+  }
+
+  abrirDialogoEditarTurno(turno: Turno): void {
+    const dialogRef = this.dialog.open(EditarturnodialogComponent, {
+      width: '400px',
+      data: {
+        pacienteId: turno.idPaciente!,
+        odontologoId: turno.odontologoId!,
+        obraSocialId: turno.obraSocialId!
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.editar) {
+        const datos: EditarTurnoDTO = {
+          IdPaciente: result.pacienteId,
+          IdOdontologo: result.odontologoId,
+          IdObraSocial: result.obraSocialId
+        };
+
+        this.turnosService.editarTurno(turno.id, datos).subscribe({
+          next: () => {
+            this.obtenerTurnos();
+            Swal.fire({ icon: 'success', title: 'Editado correctamente' });
+          },
+          error: (err) => {
+            console.error('Error en PUT editarTurno:', err);
+            Swal.fire('Error', 'No se pudo editar el turno', 'error');
+          }
+        });
+      } else if (result?.cancelar) {
+        this.cancelarTurno(turno);
+      }
+    });
+  }
+
+  cancelarTurno(turno: Turno): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción cancelará el turno.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.turnosService.cancelarTurno(turno.id).subscribe({
+          next: () => {
+            this.obtenerTurnos();
+            Swal.fire({ icon: 'success', title: 'Turno cancelado correctamente' });
+          },
+          error: () => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cancelar el turno.'
+            });
+          }
+        });
+      }
+    });
+  }
+
+    marcar(turno: Turno) {
+    const asistencia = {
+      asistio: turno.asistio
+    };
+  
+    this.turnosService.marcarAsistencia(turno.id, asistencia).subscribe({
+      next: () => console.log('Asistencia actualizada.'),
+      error: (err) => console.error('Error al actualizar asistencia:', err)
+    });
   }
 
   semanaAnterior(): void {
     this.inicioSemana = this.inicioSemana.clone().subtract(7, 'days');
     this.actualizarCalendario();
+    this.obtenerTurnos();
   }
 
   semanaSiguiente(): void {
     this.inicioSemana = this.inicioSemana.clone().add(7, 'days');
     this.actualizarCalendario();
+    this.obtenerTurnos();
+  }
+
+  trackByDia(index: number, item: string): string {
+    return item;
+  }
+
+  trackByHora(index: number, item: string): string {
+    return item;
   }
 }
