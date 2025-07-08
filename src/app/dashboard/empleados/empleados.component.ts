@@ -76,7 +76,7 @@ export class EmpleadosComponent implements OnInit{
     eliminarEmpleado(id: number): void {
       Swal.fire({
         title: '¿Estás seguro?',
-        text: `¿Querés eliminar al odontólogo ${id}?`,
+        text: `¿Quieres eliminar al odontólogo?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sí, eliminar',

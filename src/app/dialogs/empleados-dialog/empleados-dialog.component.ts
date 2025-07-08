@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonModule, MatIconAnchor } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EmpleadosService } from '../../service/empleados.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { CrearEmpleado } from '../../interface/crear.empleado';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-empleados-dialog',
@@ -16,15 +18,21 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './empleados-dialog.component.html',
   styleUrls: ['./empleados-dialog.component.scss']
 })
 export class EmpleadosDialogComponent {
   form!: FormGroup;
+  hidePassword: boolean = true;
+
+
+  
 
   constructor(
+
     private fb: FormBuilder,
     private empleadoService: EmpleadosService,
     private dialogRef: MatDialogRef<EmpleadosDialogComponent>,
@@ -35,6 +43,11 @@ export class EmpleadosDialogComponent {
       email: [data?.empleado?.email || '', [Validators.required, Validators.email]],
       password: [data?.empleado?.password || '', Validators.required]
     });
+
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
   onSave(): void {
@@ -42,8 +55,8 @@ export class EmpleadosDialogComponent {
 
     const empleadoData: CrearEmpleado = this.form.value;
 
-    const request = this.data?.empleado
-      ? this.empleadoService.actualizarEmpleado((this.data.empleado as any).id, empleadoData)
+    const request = this.data?.empleado?.id
+      ? this.empleadoService.actualizarEmpleado(this.data.empleado.id, empleadoData)
       : this.empleadoService.crearEmpleado(empleadoData);
 
     const mensajeAccion = this.data?.empleado ? 'editado' : 'creado';
@@ -61,6 +74,7 @@ export class EmpleadosDialogComponent {
 
 
 
+
   onCancel(): void {
     this.dialogRef.close(false);
   }
@@ -70,8 +84,3 @@ export class EmpleadosDialogComponent {
   get password() { return this.form.get('password'); }
 }
 
-export interface CrearEmpleado {
-  nombre: string;
-  email: string;
-  password: string;
-}

@@ -32,7 +32,7 @@ import { TurnosService } from '../../service/turnos.service';
 export class TurnosComponent implements OnInit {
 
   calendario!: CalendarioDTO;
-  turnos: any[] = []; // Reemplazalo por el tipo correcto, ej. TurnoDetalleDTO[]
+  turnos: any[] = []; 
   cargando: boolean = true;
 
   calendarios: CalendarioDTO[] = [];
@@ -83,7 +83,7 @@ export class TurnosComponent implements OnInit {
   dialogRef.afterClosed().subscribe((nuevoCalendario: CalendarioDTO) => {
     if (nuevoCalendario) {      
       this.calendario = nuevoCalendario;
-      this.cargarCalendario(); // carga turnos del nuevo calendario
+      this.cargarCalendario(); 
     }
   });
 }

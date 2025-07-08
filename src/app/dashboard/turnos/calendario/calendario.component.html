@@ -1,10 +1,7 @@
-
-<p style="color: red;">Componente calendario cargado</p>
-
 <div class="semana-nav">
-  <button (click)="semanaAnterior()">← Semana anterior</button>
-  <span class="titulo-semana">Semana del {{ inicioSemana.format('DD/MM') }}</span>
-  <button (click)="semanaSiguiente()">Semana siguiente →</button>
+    <button (click)="semanaAnterior()">← Semana anterior</button>
+    <span class="titulo-semana">Semana del {{ inicioSemana.format('DD/MM') }}</span>
+    <button (click)="semanaSiguiente()">Semana siguiente →</button>
 </div>
 
 <div *ngIf="!cargando; else cargandoTpl" class="contenedor-calendario">
@@ -12,25 +9,34 @@
         <thead>
             <tr>
                 <th class="headers horarios">Horarios</th>
-                <th *ngFor="let dia of diasSemana" class="headers">{{ dia }}</th>
+                <th *ngFor="let dia of diasSemana; trackBy: trackByDia" class="headers">
+                    {{ dia }}
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let hora of horarios">
+            <tr *ngFor="let hora of horarios; trackBy: trackByHora">
                 <td class="horarios">{{ hora }}</td>
-                <td *ngFor="let dia of diasSemana">
-                    <div [ngClass]="estiloTurno(obtenerTurno(dia, hora))"
-                        (click)="manejarClick(obtenerTurno(dia, hora), dia, hora)">
-                        {{ obtenerTurno(dia, hora)?.nombrePaciente || 'Disponible' }}
-                    </div>
+                <td *ngFor="let dia of diasSemana; trackBy: trackByDia">
+                    <ng-container *ngIf="getTurnoMap(dia, hora) as turno">
+                        <div [ngClass]="estiloTurno(turno)" (click)="manejarClick(turno, dia, hora)"
+                            style="position: relative;">
+                            {{ turno?.disponible ? 'Disponible' : (turno.asistio ? 'Asistió' : 'Reservado') }}
+
+
+                            <mat-checkbox [checked]="turno.asistio" (change)="marcar(turno)"></mat-checkbox>
+                        </div>
+                    </ng-container>
                 </td>
             </tr>
         </tbody>
     </table>
+
+
 </div>
 
 <ng-template #cargandoTpl>
-  <div class="spinner-container">
-    <mat-spinner></mat-spinner>
-  </div>
+    <div class="spinner-container">
+        <mat-spinner></mat-spinner>
+    </div>
 </ng-template>

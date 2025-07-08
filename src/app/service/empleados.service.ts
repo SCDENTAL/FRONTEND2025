@@ -20,15 +20,17 @@ export class EmpleadosService {
     return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
   }
 
-  crearEmpleado(paciente: Empleado): Observable<Empleado> {
-    return this.http.post<Empleado>(this.apiUrl, paciente);
+  crearEmpleado(empleado: Empleado): Observable<Empleado> {
+    return this.http.post<Empleado>(this.apiUrl, empleado);
   }
 
-  actualizarEmpleado(id: number, paciente: Empleado): Observable<Empleado> {
-    return this.http.put<Empleado>(`${this.apiUrl}/${id}`, paciente);
+  actualizarEmpleado(id: number, empleado: Empleado): Observable<Empleado> {
+    return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
   }
-
+  
   eliminarEmpleado(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+
 }
