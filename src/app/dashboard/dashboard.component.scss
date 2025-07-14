@@ -2,10 +2,25 @@
   height: 100vh;
 }
 
+.sidenav-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .sidenav {
   width: 300px;
   padding: 0;
   background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
 }
 
 .nav-link {
@@ -75,10 +90,20 @@
 
 @media (max-width: 768px) {
   .nav-items a.nav-link {
-    font-size: 20px;
-    justify-content: flex-start;
-    gap: 9px;
+    font-size: 28px;
+    padding: 10px;
+    justify-content: flex-start;    
   }
+   
+   .logout-button {
+    height: 60px;
+    font-size: 20px;
+    padding: 0 16px;
+
+    mat-icon {
+      font-size: 17px;
+    }
+
 
   .emoji {
     display: inline-block;
@@ -96,4 +121,5 @@
       display: inline-block;
     }
   }
+}
 }
