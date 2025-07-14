@@ -32,6 +32,17 @@
   background-color: #ef9a9a;
 }
 
+.turno-asistido {
+  background-color: #fff9c4;
+  color: #795548;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.turno-asistido:hover {
+  background-color: #fff59d;
+}
+
 .sin-turno {
   background-color: #e0e0e0;
   color: #757575;
@@ -71,62 +82,12 @@
   }
 }
 
-
-.turno-asistido {
-  background-color: #fff9c4; // Amarillo apagado
-  color: #795548;            // Marrón claro para el texto
-  font-style: italic;
-  opacity: 0.9;
-}
-
-.turno-asistido:hover {
-  background-color: #fff59d;
-}
-
-/* MOBILE */
-@media (max-width: 600px) {
-  .semana-nav {
-    flex-direction: column;
-    align-items: stretch;
-
-    button {
-      width: 100%;
-    }
-
-    .titulo-semana {
-      margin: 8px 0;
-      text-align: center;
-    }
-  }
-
-  .contenedor-calendario table {
-    display: none;
-  }
-
-  .card-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px;
-  }
-
-  .card-turno {
-    flex: 1 1 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 6px;
-    font-size: 0.8rem;
-    background: #fafafa;
-  }
-}
-
-/* GENERAL CALENDARIO */
 .contenedor-calendario {
   display: flex;
   justify-content: center;
   overflow-x: auto;
   padding: 16px;
+  width: 100%;
 }
 
 table {
@@ -144,7 +105,7 @@ td {
 }
 
 th {
-  background-color: #000000;
+  background-color: #2370ff;
   color: white;
   position: sticky;
   top: 0;
@@ -158,13 +119,15 @@ td {
   position: relative;
 }
 
+
+
 .horarios {
-  background-color: #ede7f6;
+  background-color: #2370ff;
+  color: whitesmoke;
   font-weight: bold;
   min-width: 80px;
 }
 
-/* Spinner */
 .spinner-container {
   display: flex;
   justify-content: center;
@@ -172,7 +135,32 @@ td {
   height: 200px;
 }
 
-/* Tablet */
+.disponible-desktop,
+.asistio-desktop,
+.reservado-desktop {
+  display: inline;
+}
+
+.disponible-mobile,
+.asistio-mobile,
+.reservado-mobile {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .disponible-desktop,
+  .asistio-desktop,
+  .reservado-desktop {
+    display: none;
+  }
+
+  .disponible-mobile,
+  .asistio-mobile,  
+  .reservado-mobile {
+    display: inline;
+  }
+}
+
 @media (min-width: 600px) and (max-width: 1023px) {
   .turno {
     font-size: 0.85rem;
@@ -183,7 +171,48 @@ td {
   }
 }
 
-/* Desktop grande */
+@media (max-width: 600px) {
+  .semana-nav {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+
+    .titulo-semana {
+      margin: 8px 0;
+      text-align: center;
+      font-size: 1rem;
+    }
+  }
+
+  .contenedor-calendario {
+    padding: 8px;
+  }
+
+  .contenedor-calendario table {
+    display: table;
+    width: 100%;
+    min-width: unset;
+  }
+
+  .turno {
+    font-size: 0.75rem;
+    padding: 2px;
+  }
+
+  th,
+  td {
+    font-size: 0.75rem;
+    padding: 2px;
+  }
+
+  .horarios {
+    min-width: 60px;
+  }
+}
+
 @media (min-width: 1400px) {
   .turno {
     min-width: 100px;

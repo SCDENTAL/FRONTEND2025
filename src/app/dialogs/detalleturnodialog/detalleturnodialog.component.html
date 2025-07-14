@@ -1,3 +1,7 @@
+
+<div class="container">
+
+
 <h2 mat-dialog-title>Detalle del Turno</h2>
 
 <div mat-dialog-content class="detalle-container">
@@ -8,7 +12,7 @@
 
   <div class="detalle-item">
     <span class="etiqueta">Hora:</span>
-    <span>{{ turno.horario | slice:0:5 }}</span> 
+    <span>{{ turno.horario | slice:0:5 }}</span>
   </div>
 
   <div class="detalle-item">
@@ -28,7 +32,9 @@
 </div>
 
 <div mat-dialog-actions align="end">
-  <button  (click)="cerrar()">Cerrar</button>
-  <button  (click)="editar()">Editar</button>
-  <button  (click)="cancelar()">Cancelar turno</button>
+  <button (click)="cerrar()" mat-raised-button color="primary" type="submit">Cerrar</button>
+  <button (click)="editar()" mat-raised-button color="primary" type="submit">Editar</button>
+  <button (click)="cancelar()" mat-raised-button color="primary" type="submit">Cancelar turno</button>
+</div>
+
 </div>

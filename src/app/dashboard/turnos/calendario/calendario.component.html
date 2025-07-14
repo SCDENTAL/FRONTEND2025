@@ -21,10 +21,24 @@
                     <ng-container *ngIf="getTurnoMap(dia, hora) as turno">
                         <div [ngClass]="estiloTurno(turno)" (click)="manejarClick(turno, dia, hora)"
                             style="position: relative;">
-                            {{ turno?.disponible ? 'Disponible' : (turno.asistio ? 'Asistió' : 'Reservado') }}
+                            <span class="texto-disponibilidad">
+                                <ng-container *ngIf="turno?.disponible">
+                                    <span class="disponible-desktop">Disponible</span>
+                                    <span class="disponible-mobile">Dispo</span>
+                                </ng-container>
+                                <ng-container *ngIf="!turno?.disponible && turno?.asistio">
+                                    <span class="asistio-desktop">Asistió</span>
+                                    <span class="asistio-mobile">Asist.</span>
+                                </ng-container>
+                                <ng-container *ngIf="!turno?.disponible && !turno?.asistio">
+                                    <span class="reservado-desktop">Reservado</span>
+                                    <span class="reservado-mobile">Res.</span>
+                                </ng-container>
+                            </span>
+
+                            <!-- {{ turno?.disponible ? 'Disponible' : (turno.asistio ? 'Asistió' : 'Reservado') }}                             -->
 
 
-                            <mat-checkbox [checked]="turno.asistio" (change)="marcar(turno)"></mat-checkbox>
                         </div>
                     </ng-container>
                 </td>

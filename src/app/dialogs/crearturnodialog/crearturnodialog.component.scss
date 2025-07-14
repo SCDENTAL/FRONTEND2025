@@ -1,8 +1,26 @@
+.container{
+  height: auto;
+  width: auto;
+  
+
+  padding: 30px;
+}
+
+title{
+  justify-content: center;
+  align-items: center;
+}
+
 form {
     
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+}
+mat-option input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
 }
 
 mat-form-field {

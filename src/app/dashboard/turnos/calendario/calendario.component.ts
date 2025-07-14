@@ -28,7 +28,7 @@ import { TurnoOdontologo } from '../../../interface/turno-odontologo';
   selector: 'app-calendario',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     MatProgressSpinnerModule,
     MatCheckboxModule
   ],
@@ -49,7 +49,7 @@ export class CalendarioComponent implements OnInit {
 
   cargando: boolean = true;
 
-  inicioSemana: moment.Moment = moment().isoWeekday(1); 
+  inicioSemana: moment.Moment = moment().isoWeekday(1);
 
   constructor(
     private http: HttpClient,
@@ -140,10 +140,10 @@ export class CalendarioComponent implements OnInit {
   }
 
   estiloTurno(turno?: Turno): string {
-  if (!turno) return 'sin-turno turno';
-  if (turno.asistio) return 'turno turno-asistido';
-  return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
-}
+    if (!turno) return 'sin-turno turno';
+    if (turno.asistio) return 'turno turno-asistido';
+    return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
+  }
 
   manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
     if (!turno) return;
@@ -165,8 +165,7 @@ export class CalendarioComponent implements OnInit {
         year: moment(this.calendario.fechaInicio).year()
       }).toDate();
 
-    const dialogRef = this.dialog.open(CrearturnodialogComponent, {
-      width: '400px',
+    const dialogRef = this.dialog.open(CrearturnodialogComponent, {      
       data: { fechaHora: fechaSeleccionada }
     });
 
@@ -212,39 +211,54 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-  abrirDialogoEditarTurno(turno: Turno): void {
-    const dialogRef = this.dialog.open(EditarturnodialogComponent, {
-      width: '400px',
-      data: {
-        pacienteId: turno.idPaciente!,
-        odontologoId: turno.odontologoId!,
-        obraSocialId: turno.obraSocialId!
-      }
-    });
+abrirDialogoEditarTurno(turno: Turno): void {
+  const dialogRef = this.dialog.open(EditarturnodialogComponent, {    
+    data: {
+      pacienteId: turno.idPaciente!,
+      odontologoId: turno.odontologoId!,
+      obraSocialId: turno.obraSocialId!,
+      Asistio: turno.asistio ?? false
+    }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result?.editar) {
-        const datos: EditarTurnoDTO = {
-          IdPaciente: result.pacienteId,
-          IdOdontologo: result.odontologoId,
-          IdObraSocial: result.obraSocialId
-        };
-
-        this.turnosService.editarTurno(turno.id, datos).subscribe({
-          next: () => {
+  dialogRef.afterClosed().subscribe(result => {
+    if (result?.editar) {
+      const datosEditar: EditarTurnoDTO = {
+        IdPaciente: result.pacienteId,
+        IdOdontologo: result.odontologoId,
+        IdObraSocial: result.obraSocialId
+      };
+      
+      this.turnosService.editarTurno(turno.id, datosEditar).subscribe({
+        next: () => {
+         
+          if (turno.asistio !== result.asistio) {
+            this.turnosService.marcarAsistencia(turno.id, { asistio: result.asistio }).subscribe({
+              next: () => {
+                turno.asistio = result.asistio; 
+                this.obtenerTurnos(); 
+                Swal.fire({ icon: 'success', title: 'Asistencia actualizada correctamente' });
+              },
+              error: () => {
+                Swal.fire('Error', 'No se pudo actualizar la asistencia', 'error');
+              }
+            });
+          } else {            
             this.obtenerTurnos();
-            Swal.fire({ icon: 'success', title: 'Editado correctamente' });
-          },
-          error: (err) => {
-            console.error('Error en PUT editarTurno:', err);
-            Swal.fire('Error', 'No se pudo editar el turno', 'error');
+            Swal.fire({ icon: 'success', title: 'Turno editado correctamente' });
           }
-        });
-      } else if (result?.cancelar) {
-        this.cancelarTurno(turno);
-      }
-    });
-  }
+        },
+        error: (err) => {          
+          Swal.fire('Error', 'No se pudo editar el turno', 'error');
+        }
+      });
+    } else if (result?.cancelar) {
+      this.cancelarTurno(turno);
+    }
+  });
+}
+
+
 
   cancelarTurno(turno: Turno): void {
     Swal.fire({
@@ -274,16 +288,22 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-    marcar(turno: Turno) {
+  marcar(turno: Turno) {
     const asistencia = {
-      asistio: turno.asistio
+      asistio: !turno.asistio 
     };
-  
+
     this.turnosService.marcarAsistencia(turno.id, asistencia).subscribe({
-      next: () => console.log('Asistencia actualizada.'),
-      error: (err) => console.error('Error al actualizar asistencia:', err)
+      next: () => {
+        turno.asistio = asistencia.asistio;  
+      },
+      error: (err) => {
+        console.error('Error al actualizar asistencia:', err);        
+        turno.asistio = !asistencia.asistio;
+      }
     });
   }
+
 
   semanaAnterior(): void {
     this.inicioSemana = this.inicioSemana.clone().subtract(7, 'days');

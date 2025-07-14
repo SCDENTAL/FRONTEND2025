@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 
@@ -22,11 +23,16 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    MatCheckboxModule
+  
+  ],
   templateUrl: './editarturnodialog.component.html',
   styleUrl: './editarturnodialog.component.scss'
 })
 export class EditarturnodialogComponent implements OnInit {
+
+
   obrasSociales: ObraSocial[] = [];
   pacientes: Paciente[] = [];
   odontologos: odontologoDetalle[] = [];
@@ -42,13 +48,15 @@ export class EditarturnodialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       pacienteId: number,
       odontologoId: number,
-      obraSocialId: number
+      obraSocialId: number,
+      Asistio: boolean,
     }
   ) {
     this.form = this.fb.group({
       pacienteId: [data.pacienteId, Validators.required],
       odontologoId: [data.odontologoId, Validators.required],
       obraSocialId: [data.obraSocialId, Validators.required],
+      asistio: [data.Asistio ?? false] // 👈 default en false
     });
   }
 
@@ -76,6 +84,7 @@ export class EditarturnodialogComponent implements OnInit {
   get obraSocialId() { return this.form.get('obraSocialId'); }
   get pacienteId() { return this.form.get('pacienteId'); }
   get odontologoId() { return this.form.get('odontologoId'); }
+  get asistio() { return this.form.get('asistio'); }
 }
 
 

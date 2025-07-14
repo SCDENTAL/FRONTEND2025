@@ -1,11 +1,26 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
+import {
+  MatFormFieldModule
+} from '@angular/material/form-field';
+import {
+  MatInputModule
+} from '@angular/material/input';
+import {
+  MatButtonModule
+} from '@angular/material/button';
+import {
+  MatSelectModule
+} from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { startWith, map } from 'rxjs/operators';
 
 import { ObraSocial } from '../../interface/obra-social';
 import { Paciente } from '../../interface/paciente';
@@ -15,6 +30,7 @@ import { ReservarTurnoDTO } from '../../interface/TurnoDTO/ReservarTurnoDTO';
 import { EmpleadosService } from '../../service/empleados.service';
 import { PacienteService } from '../../service/paciente.service';
 import { ObraSocialService } from '../../service/obra-social.service';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
   selector: 'app-crearturnodialog',
@@ -25,24 +41,31 @@ import { ObraSocialService } from '../../service/obra-social.service';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './crearturnodialog.component.html',
   styleUrl: './crearturnodialog.component.scss'
 })
 export class CrearturnodialogComponent implements OnInit {
 
-  obrasSociales: ObraSocial[] = [];
-  pacientes: Paciente[] = [];
-  odontologos: odontologoDetalle[] = [];
-
   form: FormGroup;
+
+  pacientes: Paciente[] = [];
+  pacientesFiltrados: Paciente[] = [];
+  pacienteFiltroControl = new FormControl('');
+
+  obrasSociales: ObraSocial[] = [];
+  obrasSocialesFiltradas: ObraSocial[] = [];
+  obraSocialFiltroControl = new FormControl('');
+
+  odontologos: odontologoDetalle[] = [];
 
   constructor(
     private fb: FormBuilder,
     private pacientesService: PacienteService,
     private empleadosService: EmpleadosService,
-    private obraSociales: ObraSocialService,
+    private obraSocialesService: ObraSocialService,
     private dialogRef: MatDialogRef<CrearturnodialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { fechaHora: Date, turno?: ReservarTurnoDTO }
   ) {
@@ -54,9 +77,45 @@ export class CrearturnodialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pacientesService.getPacientes().subscribe(res => this.pacientes = res);
+    this.pacientesService.getPacientes().subscribe(res => {
+      this.pacientes = res;
+      this.pacientesFiltrados = res;
+
+      this.pacienteFiltroControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this.filtrarPacientes(value ?? ''))
+        )
+        .subscribe(filtered => this.pacientesFiltrados = filtered);
+    });
+
+    this.obraSocialesService.getObrasSociales().subscribe(res => {
+      this.obrasSociales = res;
+      this.obrasSocialesFiltradas = res;
+
+      this.obraSocialFiltroControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this.filtrarObrasSociales(value ?? ''))
+        )
+        .subscribe(filtered => this.obrasSocialesFiltradas = filtered);
+    });
+
     this.empleadosService.getEmpleados().subscribe(res => this.odontologos = res);
-    this.obraSociales.getObrasSociales().subscribe(res => this.obrasSociales = res);
+  }
+
+  private filtrarPacientes(valor: string): Paciente[] {
+    const filtro = valor.toLowerCase();
+    return this.pacientes.filter(p =>
+      `${p.nombre} ${p.apellido}`.toLowerCase().includes(filtro)
+    );
+  }
+
+  private filtrarObrasSociales(valor: string): ObraSocial[] {
+    const filtro = valor.toLowerCase();
+    return this.obrasSociales.filter(o =>
+      o.nombre.toLowerCase().includes(filtro)
+    );
   }
 
   guardar(): void {
@@ -68,8 +127,6 @@ export class CrearturnodialogComponent implements OnInit {
       this.dialogRef.close(resultado);
     }
   }
-
-
 
   cancelar(): void {
     this.dialogRef.close();

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Paciente } from '../interface/paciente';
 import { Observable } from 'rxjs';
 import { CrearPaciente } from '../interface/crear-paciente';
+import { pacienteDTO } from '../interface/pacienteDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +24,11 @@ export class PacienteService {
     return this.http.get<Paciente>(`${this.apiUrl}/${id}`);
   }
 
-  crearPaciente(paciente: CrearPaciente): Observable<Paciente> {
+  crearPaciente(paciente: pacienteDTO): Observable<Paciente> {
     return this.http.post<Paciente>(this.apiUrl, paciente);
   }
 
-  actualizarPaciente(id: number, paciente: Paciente): Observable<Paciente> {
+  actualizarPaciente(id: number, paciente: pacienteDTO): Observable<Paciente> {
     return this.http.put<Paciente>(`${this.apiUrl}/${id}`, paciente);
   }
 

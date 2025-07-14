@@ -64,8 +64,7 @@ export class RegistroComponent {
               this.router.navigate(['/login']);
             });
         },
-        error: (error) => {
-          console.error('Error en el registro', error);
+        error: (error) => {          
           const mensaje = error?.error?.message || 'No se pudo completar el registro.';
           Swal.fire('Error', mensaje, 'error');
         }

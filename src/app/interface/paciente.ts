@@ -1,6 +1,3 @@
-import { ObraSocial } from "./obra-social";
-
-
 export interface Paciente {
     id: number;
     nombre: string;
