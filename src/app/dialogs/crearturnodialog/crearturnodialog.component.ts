@@ -105,11 +105,11 @@ export class CrearturnodialogComponent implements OnInit {
   }
 
   private filtrarPacientes(valor: string): Paciente[] {
-    const filtro = valor.toLowerCase();
-    return this.pacientes.filter(p =>
-      `${p.nombre} ${p.apellido}`.toLowerCase().includes(filtro)
-    );
-  }
+  const filtro = valor.toLowerCase();
+  return this.pacientes.filter(p =>
+    (`${p.nombre} ${p.apellido} ${p.dni?.toString() ?? ''}`).toLowerCase().includes(filtro)
+  );
+}
 
   private filtrarObrasSociales(valor: string): ObraSocial[] {
     const filtro = valor.toLowerCase();
@@ -127,6 +127,13 @@ export class CrearturnodialogComponent implements OnInit {
       this.dialogRef.close(resultado);
     }
   }
+
+  obtenerTextoPacienteSeleccionado(): string {
+  const id = this.form.get('pacienteId')?.value;
+  const paciente = this.pacientes.find(p => p.id === id);
+  return paciente ? `${paciente.dni} - ${paciente.nombre} ${paciente.apellido}` : '';
+}
+
 
   cancelar(): void {
     this.dialogRef.close();

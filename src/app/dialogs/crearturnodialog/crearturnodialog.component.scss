@@ -23,6 +23,22 @@ mat-option input {
   font-size: 14px;
 }
 
+.opcion-paciente {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.opcion-paciente .dni {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212121;
+}
+
+.opcion-paciente .nombre {
+  font-size: 13px;
+  color: #666;
+}
 mat-form-field {
   width: 100%;
 }

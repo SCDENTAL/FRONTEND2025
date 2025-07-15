@@ -5,23 +5,39 @@
 
   <form [formGroup]="form" (ngSubmit)="guardar()">
 
-    <!-- PACIENTE -->
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Paciente</mat-label>
-      <mat-select formControlName="pacienteId">
-        <ngx-mat-select-search
-          [formControl]="pacienteFiltroControl"
-          placeholderLabel="Buscar paciente..."
+      <!-- <mat-select formControlName="pacienteId">
+        <ngx-mat-select-search [formControl]="pacienteFiltroControl" placeholderLabel="Buscar paciente..."
           noEntriesFoundLabel="No se encontraron pacientes">
         </ngx-mat-select-search>
 
         <mat-option *ngFor="let paciente of pacientesFiltrados" [value]="paciente.id">
-          {{ paciente.nombre }}
+          <div class="opcion-paciente">
+            <div class="dni">{{ paciente.dni }}</div>
+            <div class="nombre">{{ paciente.nombre }} {{ paciente.apellido }}</div>
+          </div>
+        </mat-option>
+      </mat-select> -->
+
+      <mat-select formControlName="pacienteId">
+        <mat-select-trigger>
+          {{ obtenerTextoPacienteSeleccionado() }}
+        </mat-select-trigger>
+
+        <ngx-mat-select-search [formControl]="pacienteFiltroControl" placeholderLabel="Buscar paciente..."
+          noEntriesFoundLabel="No se encontraron pacientes">
+        </ngx-mat-select-search>
+
+        <mat-option *ngFor="let paciente of pacientesFiltrados" [value]="paciente.id">
+          <div class="opcion-paciente">
+            <div class="dni">{{ paciente.dni }}</div>
+            <div class="nombre">{{ paciente.nombre }} {{ paciente.apellido }}</div>
+          </div>
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <!-- ODONTÓLOGO -->
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Odontólogo</mat-label>
       <mat-select formControlName="odontologoId" required>
@@ -31,13 +47,10 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- OBRA SOCIAL -->
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Obra Social</mat-label>
       <mat-select formControlName="obraSocialId">
-        <ngx-mat-select-search
-          [formControl]="obraSocialFiltroControl"
-          placeholderLabel="Buscar obra social"
+        <ngx-mat-select-search [formControl]="obraSocialFiltroControl" placeholderLabel="Buscar obra social"
           noEntriesFoundLabel="No se encontraron coincidencias">
         </ngx-mat-select-search>
 
