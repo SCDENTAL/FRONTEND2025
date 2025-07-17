@@ -75,7 +75,7 @@ export class PacientesDialogComponent implements OnInit {
       apellido: [this.data?.paciente?.apellido || '', Validators.required],
       dni: [this.data?.paciente?.dni || '', Validators.required],
       telefono: [this.data?.paciente?.telefono || '', Validators.required],
-      email: [this.data?.paciente?.email || '', [Validators.required, Validators.email]],
+      email: [this.data?.paciente?.email || '', Validators.email],
       obraSocialId: [
         this.data?.paciente?.obraSocial
           ? this.obtenerIdObraSocialPorNombre(this.data.paciente.obraSocial)

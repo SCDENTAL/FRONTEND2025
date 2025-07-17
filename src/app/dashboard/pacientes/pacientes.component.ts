@@ -31,7 +31,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
 })
 export class PacientesComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'telefono', 'email', 'obraSocial', 'opciones'];
+  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'telefono', 'obraSocial', 'opciones'];
   dataSource: MatTableDataSource<Paciente> = new MatTableDataSource();
 
   @ViewChild(MatSort) sort!: MatSort;
