@@ -38,12 +38,7 @@
       <ng-container matColumnDef="telefono">
         <th mat-header-cell *matHeaderCellDef>Teléfono</th>
         <td mat-cell *matCellDef="let paciente">{{ paciente.telefono }}</td>
-      </ng-container>
-
-      <!-- <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let paciente">{{ paciente.email }}</td>
-      </ng-container> -->
+      </ng-container>   
 
       <ng-container matColumnDef="obraSocial">
         <th mat-header-cell *matHeaderCellDef>Obra Social</th>
@@ -64,6 +59,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

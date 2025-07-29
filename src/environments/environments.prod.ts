@@ -1,5 +1,4 @@
 export const environment = {
-    production: true,
-    apiUrl: 'https://mi-backend-en-produccion.com/api'
-  };
-  
+  production: true,
+  apiUrl: 'https://scdentalbackend-agecceg8bgcac6gs.brazilsouth-01.azurewebsites.net'
+};

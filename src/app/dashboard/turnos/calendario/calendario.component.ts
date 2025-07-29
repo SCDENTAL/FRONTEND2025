@@ -43,6 +43,9 @@ export class CalendarioComponent implements OnInit {
   turnosMap: { [key: string]: Turno } = {};
   calendario!: CalendarioDTO;
 
+  hayTurnosSemanaAnterior: boolean = true;
+  hayTurnosSemanaSiguiente: boolean = true;
+
   pacientes: Paciente[] = [];
   odontologos: odontologoDetalle[] = [];
   obrasSociales: ObraSocial[] = [];
@@ -72,6 +75,7 @@ export class CalendarioComponent implements OnInit {
           this.actualizarCalendario();
           this.generarHorarios();
           this.obtenerTurnos();
+          this.verificarSemanasVecinas();
         } else {
           this.cargando = false;
         }
@@ -115,6 +119,7 @@ export class CalendarioComponent implements OnInit {
         this.turnos = turnos || [];
         this.actualizarTurnosMap();
         this.cargando = false;
+        this.verificarSemanasVecinas();
       },
       error: (error) => {
         console.error('Error al cargar turnos de la semana:', error);
@@ -165,7 +170,7 @@ export class CalendarioComponent implements OnInit {
         year: moment(this.calendario.fechaInicio).year()
       }).toDate();
 
-    const dialogRef = this.dialog.open(CrearturnodialogComponent, {      
+    const dialogRef = this.dialog.open(CrearturnodialogComponent, {
       data: { fechaHora: fechaSeleccionada }
     });
 
@@ -211,52 +216,52 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-abrirDialogoEditarTurno(turno: Turno): void {
-  const dialogRef = this.dialog.open(EditarturnodialogComponent, {    
-    data: {
-      pacienteId: turno.idPaciente!,
-      odontologoId: turno.odontologoId!,
-      obraSocialId: turno.obraSocialId!,
-      Asistio: turno.asistio ?? false
-    }
-  });
+  abrirDialogoEditarTurno(turno: Turno): void {
+    const dialogRef = this.dialog.open(EditarturnodialogComponent, {
+      data: {
+        pacienteId: turno.idPaciente!,
+        odontologoId: turno.odontologoId!,
+        obraSocialId: turno.obraSocialId!,
+        Asistio: turno.asistio ?? false
+      }
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result?.editar) {
-      const datosEditar: EditarTurnoDTO = {
-        IdPaciente: result.pacienteId,
-        IdOdontologo: result.odontologoId,
-        IdObraSocial: result.obraSocialId
-      };
-      
-      this.turnosService.editarTurno(turno.id, datosEditar).subscribe({
-        next: () => {
-         
-          if (turno.asistio !== result.asistio) {
-            this.turnosService.marcarAsistencia(turno.id, { asistio: result.asistio }).subscribe({
-              next: () => {
-                turno.asistio = result.asistio; 
-                this.obtenerTurnos(); 
-                Swal.fire({ icon: 'success', title: 'Asistencia actualizada correctamente' });
-              },
-              error: () => {
-                Swal.fire('Error', 'No se pudo actualizar la asistencia', 'error');
-              }
-            });
-          } else {            
-            this.obtenerTurnos();
-            Swal.fire({ icon: 'success', title: 'Turno editado correctamente' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.editar) {
+        const datosEditar: EditarTurnoDTO = {
+          IdPaciente: result.pacienteId,
+          IdOdontologo: result.odontologoId,
+          IdObraSocial: result.obraSocialId
+        };
+
+        this.turnosService.editarTurno(turno.id, datosEditar).subscribe({
+          next: () => {
+
+            if (turno.asistio !== result.asistio) {
+              this.turnosService.marcarAsistencia(turno.id, { asistio: result.asistio }).subscribe({
+                next: () => {
+                  turno.asistio = result.asistio;
+                  this.obtenerTurnos();
+                  Swal.fire({ icon: 'success', title: 'Asistencia actualizada correctamente' });
+                },
+                error: () => {
+                  Swal.fire('Error', 'No se pudo actualizar la asistencia', 'error');
+                }
+              });
+            } else {
+              this.obtenerTurnos();
+              Swal.fire({ icon: 'success', title: 'Turno editado correctamente' });
+            }
+          },
+          error: (err) => {
+            Swal.fire('Error', 'No se pudo editar el turno', 'error');
           }
-        },
-        error: (err) => {          
-          Swal.fire('Error', 'No se pudo editar el turno', 'error');
-        }
-      });
-    } else if (result?.cancelar) {
-      this.cancelarTurno(turno);
-    }
-  });
-}
+        });
+      } else if (result?.cancelar) {
+        this.cancelarTurno(turno);
+      }
+    });
+  }
 
 
 
@@ -290,15 +295,15 @@ abrirDialogoEditarTurno(turno: Turno): void {
 
   marcar(turno: Turno) {
     const asistencia = {
-      asistio: !turno.asistio 
+      asistio: !turno.asistio
     };
 
     this.turnosService.marcarAsistencia(turno.id, asistencia).subscribe({
       next: () => {
-        turno.asistio = asistencia.asistio;  
+        turno.asistio = asistencia.asistio;
       },
       error: (err) => {
-        console.error('Error al actualizar asistencia:', err);        
+        console.error('Error al actualizar asistencia:', err);
         turno.asistio = !asistencia.asistio;
       }
     });
@@ -315,6 +320,24 @@ abrirDialogoEditarTurno(turno: Turno): void {
     this.inicioSemana = this.inicioSemana.clone().add(7, 'days');
     this.actualizarCalendario();
     this.obtenerTurnos();
+  }
+
+  verificarSemanasVecinas(): void {
+    const anteriorInicio = this.inicioSemana.clone().subtract(7, 'days').startOf('day').toISOString();
+    const anteriorFin = this.inicioSemana.clone().subtract(1, 'days').endOf('day').toISOString();
+
+    const siguienteInicio = this.inicioSemana.clone().add(7, 'days').startOf('day').toISOString();
+    const siguienteFin = this.inicioSemana.clone().add(13, 'days').endOf('day').toISOString();
+
+    this.turnosService.getTurnosPorSemana(this.calendario.id, anteriorInicio, anteriorFin).subscribe({
+      next: turnos => this.hayTurnosSemanaAnterior = turnos && turnos.length > 0,
+      error: () => this.hayTurnosSemanaAnterior = false
+    });
+
+    this.turnosService.getTurnosPorSemana(this.calendario.id, siguienteInicio, siguienteFin).subscribe({
+      next: turnos => this.hayTurnosSemanaSiguiente = turnos && turnos.length > 0,
+      error: () => this.hayTurnosSemanaSiguiente = false
+    });
   }
 
   trackByDia(index: number, item: string): string {

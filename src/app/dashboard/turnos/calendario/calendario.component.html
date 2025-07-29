@@ -1,7 +1,15 @@
 <div class="semana-nav">
-    <button (click)="semanaAnterior()">← Semana anterior</button>
-    <span class="titulo-semana">Semana del {{ inicioSemana.format('DD/MM') }}</span>
-    <button (click)="semanaSiguiente()">Semana siguiente →</button>
+  <button (click)="semanaAnterior()" [disabled]="!hayTurnosSemanaAnterior || cargando">
+    ← Semana anterior
+  </button>
+
+  <span class="titulo-semana">
+    Semana del {{ inicioSemana.format('DD/MM') }}
+  </span>
+
+  <button (click)="semanaSiguiente()" [disabled]="!hayTurnosSemanaSiguiente || cargando">
+    Semana siguiente →
+  </button>
 </div>
 
 <div *ngIf="!cargando; else cargandoTpl" class="contenedor-calendario">
