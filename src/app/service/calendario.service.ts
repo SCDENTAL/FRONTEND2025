@@ -3,14 +3,15 @@ import { Observable } from 'rxjs';
 import { CalendarioDTO } from '../interface/CalendarioDTO/calendariodto';
 import { CrearCalendarioDTO } from '../interface/CalendarioDTO/crearcalendariodto';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarioService {
 
-
-  private apiUrl = 'https://localhost:7292/api/Calendario';
+  
+  private apiUrl = `${environment.apiUrl}/Calendario`;
 
   constructor(private http: HttpClient) {}
 
