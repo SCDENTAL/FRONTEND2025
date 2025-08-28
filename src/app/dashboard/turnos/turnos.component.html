@@ -1,25 +1,40 @@
-<div class="container d-flex flex-column justify-content-start align-items-center min-vh-100">
-  <h1 class="text-dark mt-5 fs-2">CALENDARIO</h1>
+<div class="turnos-container">
 
-  <div class="col-12 col-lg-10 mt-4 d-flex flex-column align-items-center">
-    <div class="w-100 mb-3 d-flex justify-content-end gap-2">
+  <!-- Barra de acciones -->
+  <div class="acciones-calendario">
+    <div class="acciones-botones">
       <button mat-raised-button color="primary" (click)="abrirDialogoCrearCalendario()">
-        <mat-icon class="me-1">add</mat-icon>
-        Agregar Calendario
+        Crear calendario
       </button>
 
-      <button mat-raised-button color="warn" (click)="eliminarCalendario()" [disabled]="!calendario"> 
-        <mat-icon class="me-1">delete</mat-icon>
-        Eliminar Calendario
+      <button mat-raised-button color="warn" (click)="eliminarCalendario()" [disabled]="!calendario">
+        Eliminar calendario
       </button>
     </div>
 
-    <div class="calendario" *ngIf="calendario; else sinCalendarioTpl">
-      <app-calendario></app-calendario>
+    <div class="acciones-select">
+      <mat-form-field appearance="fill" class="select-calendario">
+        <mat-label>Seleccionar calendario</mat-label>
+        <mat-select [(value)]="calendario" (selectionChange)="seleccionarCalendario($event.value)">
+          <mat-option *ngFor="let cal of calendarios" [value]="cal">
+            {{ cal.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-
-    <ng-template #sinCalendarioTpl>
-      <p class="text-muted">No hay calendario cargado.</p>
-    </ng-template>
   </div>
+
+  <!-- Mensaje de carga -->
+  
+
+  <!-- Calendario seleccionado -->
+  <div *ngIf="!cargando && calendario" class="calendario-wrapper">
+    <app-calendario [calendarioId]="calendario.id"></app-calendario>
+  </div>
+
+  <!-- Mensaje si no hay calendarios -->
+  <div *ngIf="!cargando && !calendario" class="sin-calendario">
+    No hay calendarios disponibles. Crea uno para empezar.
+  </div>
+
 </div>

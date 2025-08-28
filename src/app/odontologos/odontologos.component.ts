@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-odontologos',
@@ -44,8 +45,25 @@ export class OdontologosComponent implements OnInit {
   };
 
   this.turnoService.marcarAsistencia(turno.id, asistencia).subscribe({
-    next: () => console.log('Asistencia actualizada.'),
-    error: (err) => console.error('Error al actualizar asistencia:', err)
+    next: () => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Asistencia',
+        text: 'La asistencia se actualizó correctamente.',
+        showConfirmButton: false,
+        timer: 800,
+        timerProgressBar: true
+      });
+    },
+    error: (err) => {
+      console.error('Error al actualizar asistencia:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la asistencia.',
+        showConfirmButton: true
+      });
+    }
   });
 }
 
@@ -53,6 +71,6 @@ export class OdontologosComponent implements OnInit {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
-  
+
   }
-      }
+}
