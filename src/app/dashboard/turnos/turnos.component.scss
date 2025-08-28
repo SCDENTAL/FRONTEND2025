@@ -1,11 +1,89 @@
-.calendario {
-  margin-top: 1.5rem;
-  background: whitesmoke;
-  border-radius: 12px;  
-}
-.boton {
+.turnos-container {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+
+  .acciones-calendario {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .acciones-botones {
+      display: flex;
+      gap: 0.75rem;
+
+      button {
+        flex-shrink: 0;
+      }
+    }
+
+    .acciones-select {
+      flex: 1;
+      max-width: 250px; 
+
+      .select-calendario {
+        width: 100%;
+      }
+    }
+  }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .calendario-wrapper {
+    margin-top: 1rem;
+  }
+
+  .sin-calendario {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1rem;
+    color: #666;
+  }
 }
 
+@media (max-width: 992px) {
+  .turnos-container {
+    .acciones-calendario {
+      justify-content: center;
+
+      .acciones-select {
+        max-width: 220px;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .turnos-container {
+    .acciones-calendario {
+      flex-direction: column;
+      align-items: stretch;
+
+      .acciones-botones {
+        flex-direction: column;
+        width: 100%;
+
+        button {
+          width: 100%;
+        }
+      }
+
+      .acciones-select {
+        width: 100%;
+        max-width: none;
+      }
+    }
+
+    .sin-calendario {
+      font-size: 0.95rem;
+    }
+  }
+}

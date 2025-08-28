@@ -7,7 +7,8 @@ import { EditarTurnoDTO } from '../interface/TurnoDTO/EditarTurnoDTO';
 import { Turno } from '../interface/turno';
 import { ReservarTurnoDTO } from '../interface/TurnoDTO/ReservarTurnoDTO';
 import { TurnoOdontologo } from '../interface/turno-odontologo';
-import { environment } from '../../environments/environments.prod';
+import { environment } from '../../environments/environment';
+
 
 
 @Injectable({
@@ -25,9 +26,16 @@ export class TurnosService {
 
   constructor(private http: HttpClient) { }
 
-  getTurnos(): Observable<Turno[]> {
-    return this.http.get<Turno[]>(`${this.apiUrl}/mi-calendario`, this.httpOptions);
-  }
+  // getTurnos(): Observable<Turno[]> {
+  //   return this.http.get<Turno[]>(`${this.apiUrl}/mi-calendario`, this.httpOptions);
+  // }
+
+//     getTurnos(idCalendario: number): Observable<Turno[]> {
+//   return this.http.get<Turno[]>(
+//     `${this.apiUrl}/Calendario/${idCalendario}`,
+//     this.httpOptions
+//   );
+// }
 
   getTurnosDelDiaOdontologo(): Observable<TurnoOdontologo[]> {
     return this.http.get<TurnoOdontologo[]>(`${this.apiUrl}/mis-turnos-hoy`, this.httpOptions);

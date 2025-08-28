@@ -1,4 +1,4 @@
-<div class="semana-nav">
+<!-- <div class="semana-nav">
   <button (click)="semanaAnterior()" [disabled]="!hayTurnosSemanaAnterior || cargando">
     ← Semana anterior
   </button>
@@ -10,55 +10,66 @@
   <button (click)="semanaSiguiente()" [disabled]="!hayTurnosSemanaSiguiente || cargando">
     Semana siguiente →
   </button>
+</div> -->
+
+<div class="semana-nav">
+  <button class="btn-nav anterior" 
+          (click)="semanaAnterior()" 
+          [disabled]="!hayTurnosSemanaAnterior || cargando">
+    ← Semana anterior
+  </button>
+
+  <span class="titulo-semana">
+    Semana del {{ inicioSemana.format('DD/MM') }}
+  </span>
+
+  <button class="btn-nav siguiente" 
+          (click)="semanaSiguiente()" 
+          [disabled]="!hayTurnosSemanaSiguiente || cargando">
+    Semana siguiente →
+  </button>
 </div>
 
 <div *ngIf="!cargando; else cargandoTpl" class="contenedor-calendario">
-    <table>
-        <thead>
-            <tr>
-                <th class="headers horarios">Horarios</th>
-                <th *ngFor="let dia of diasSemana; trackBy: trackByDia" class="headers">
-                    {{ dia }}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let hora of horarios; trackBy: trackByHora">
-                <td class="horarios">{{ hora }}</td>
-                <td *ngFor="let dia of diasSemana; trackBy: trackByDia">
-                    <ng-container *ngIf="getTurnoMap(dia, hora) as turno">
-                        <div [ngClass]="estiloTurno(turno)" (click)="manejarClick(turno, dia, hora)"
-                            style="position: relative;">
-                            <span class="texto-disponibilidad">
-                                <ng-container *ngIf="turno?.disponible">
-                                    <span class="disponible-desktop">Disponible</span>
-                                    <span class="disponible-mobile">Dispo</span>
-                                </ng-container>
-                                <ng-container *ngIf="!turno?.disponible && turno?.asistio">
-                                    <span class="asistio-desktop">Asistió</span>
-                                    <span class="asistio-mobile">Asist.</span>
-                                </ng-container>
-                                <ng-container *ngIf="!turno?.disponible && !turno?.asistio">
-                                    <span class="reservado-desktop">Reservado</span>
-                                    <span class="reservado-mobile">Res.</span>
-                                </ng-container>
-                            </span>
-
-                            <!-- {{ turno?.disponible ? 'Disponible' : (turno.asistio ? 'Asistió' : 'Reservado') }}                             -->
-
-
-                        </div>
-                    </ng-container>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-
+  <table>
+    <thead>
+      <tr>
+        <th class="headers horarios">Horarios</th>
+        <th *ngFor="let dia of diasSemana; trackBy: trackByDia" class="headers">
+          {{ dia }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let hora of horarios; trackBy: trackByHora">
+        <td class="horarios">{{ hora }}</td>
+        <td *ngFor="let dia of diasSemana; trackBy: trackByDia">
+          <ng-container *ngIf="getTurnoMap(dia, hora) as turno">
+            <div [ngClass]="estiloTurno(turno)" (click)="manejarClick(turno, dia, hora)" style="position: relative;">
+              <span class="texto-disponibilidad">
+                <ng-container *ngIf="turno?.disponible">
+                  <span class="disponible-desktop">Disponible</span>
+                  <span class="disponible-mobile">Dispo</span>
+                </ng-container>
+                <ng-container *ngIf="!turno?.disponible && turno?.asistio">
+                  <span class="asistio-desktop">Asistió</span>
+                  <span class="asistio-mobile">Asist.</span>
+                </ng-container>
+                <ng-container *ngIf="!turno?.disponible && !turno?.asistio">
+                  <span class="reservado-desktop">Reservado</span>
+                  <span class="reservado-mobile">Res.</span>
+                </ng-container>
+              </span>
+            </div>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <ng-template #cargandoTpl>
-    <div class="spinner-container">
-        <mat-spinner></mat-spinner>
-    </div>
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
 </ng-template>

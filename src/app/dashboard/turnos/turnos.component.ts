@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-
-
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
 
 import { CalendarioComponent } from "./calendario/calendario.component";
-import { MatIconModule } from '@angular/material/icon';
 import { CalendarioDialogComponent } from '../../dialogs/calendario-dialog/calendario-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
 import { CalendarioService } from '../../service/calendario.service';
-import { CrearCalendarioDTO } from '../../interface/CalendarioDTO/crearcalendariodto';
-import Swal from 'sweetalert2';
-import { CalendarioDTO } from '../../interface/CalendarioDTO/calendariodto';
 import { TurnosService } from '../../service/turnos.service';
+import { CalendarioDTO } from '../../interface/CalendarioDTO/calendariodto';
 
 @Component({
   selector: 'app-turnos',
@@ -23,8 +21,9 @@ import { TurnosService } from '../../service/turnos.service';
     CommonModule,
     MatButtonModule,
     MatTableModule,
-    CalendarioComponent,
     MatIconModule,
+    MatSelectModule,
+    CalendarioComponent
   ],
   templateUrl: './turnos.component.html',
   styleUrl: './turnos.component.scss'
@@ -32,61 +31,51 @@ import { TurnosService } from '../../service/turnos.service';
 export class TurnosComponent implements OnInit {
 
   calendario!: CalendarioDTO;
-  turnos: any[] = []; 
+  calendarios: CalendarioDTO[] = [];
   cargando: boolean = true;
 
-  calendarios: CalendarioDTO[] = [];
-
-
-  constructor(private dialog: MatDialog,
+  constructor(
+    private dialog: MatDialog,
     private http: HttpClient,
     private calendarioService: CalendarioService,
-    private turnoServioce: TurnosService
-  ) {
-
-
-  }
+    private turnoService: TurnosService
+  ) {}
 
   ngOnInit() {
+    this.cargarCalendarios();
+  }
+
+  cargarCalendarios(): void {
     this.calendarioService.obtenerCalendarios().subscribe({
       next: (calendarios) => {
         this.calendarios = calendarios;
-
         if (calendarios.length > 0) {
           this.calendario = calendarios[0];
-          this.cargarCalendario();
+        } else {
+          this.calendario = undefined!;
         }
-      },
-      error: (err) => {        
-      }
-    });
-  }
-
-
-  cargarCalendario(): void {
-    this.turnoServioce.getTurnos().subscribe({
-      next: (turnos) => {
-        this.turnos = turnos;
         this.cargando = false;
       },
-      error: (error) => {        
+      error: () => {
         this.cargando = false;
       }
     });
   }
 
-
+  seleccionarCalendario(cal: CalendarioDTO): void {
+    this.calendario = cal;
+  }
 
   abrirDialogoCrearCalendario(): void {
-  const dialogRef = this.dialog.open(CalendarioDialogComponent);
+    const dialogRef = this.dialog.open(CalendarioDialogComponent);
 
-  dialogRef.afterClosed().subscribe((nuevoCalendario: CalendarioDTO) => {
-    if (nuevoCalendario) {      
-      this.calendario = nuevoCalendario;
-      this.cargarCalendario(); 
-    }
-  });
-}
+    dialogRef.afterClosed().subscribe((nuevoCalendario: CalendarioDTO) => {
+      if (nuevoCalendario) {      
+        this.calendarios.push(nuevoCalendario);
+        this.calendario = nuevoCalendario;
+      }
+    });
+  }
 
   eliminarCalendario(): void {
     if (!this.calendario?.id) return;
@@ -103,7 +92,9 @@ export class TurnosComponent implements OnInit {
         this.calendarioService.eliminarCalendario(this.calendario.id).subscribe({
           next: () => {
             Swal.fire('Eliminado', 'Calendario eliminado con éxito.', 'success');
-            this.calendario = undefined!;
+            // Actualizar lista y seleccionar siguiente calendario disponible
+            this.calendarios = this.calendarios.filter(c => c.id !== this.calendario.id);
+            this.calendario = this.calendarios.length > 0 ? this.calendarios[0] : undefined!;
           },
           error: () => {
             Swal.fire('Error', 'No se pudo eliminar el calendario.', 'error');
@@ -112,12 +103,4 @@ export class TurnosComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
-
-
-
 }

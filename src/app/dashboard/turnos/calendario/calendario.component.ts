@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import moment from 'moment';
 import 'moment/locale/es';
 import { Turno } from '../../../interface/turno';
@@ -21,8 +21,7 @@ import { ObraSocial } from '../../../interface/obra-social';
 import { PacienteService } from '../../../service/paciente.service';
 import { EmpleadosService } from '../../../service/empleados.service';
 import { ObraSocialService } from '../../../service/obra-social.service';
-import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
-import { TurnoOdontologo } from '../../../interface/turno-odontologo';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-calendario',
@@ -33,9 +32,11 @@ import { TurnoOdontologo } from '../../../interface/turno-odontologo';
     MatCheckboxModule
   ],
   templateUrl: './calendario.component.html',
-  styleUrl: './calendario.component.scss'
+  styleUrls: ['./calendario.component.scss']
 })
-export class CalendarioComponent implements OnInit {
+export class CalendarioComponent implements OnInit, OnChanges {
+
+  @Input() calendarioId!: number; // 👈 recibimos el ID del calendario
 
   diasSemana: string[] = [];
   horarios: string[] = [];
@@ -68,36 +69,47 @@ export class CalendarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.calendarioService.obtenerCalendarios().subscribe({
-      next: (calendarios) => {
-        if (calendarios.length > 0) {
-          this.calendario = calendarios[0];
-          this.actualizarCalendario();
-          this.generarHorarios();
-          this.obtenerTurnos();
-          this.verificarSemanasVecinas();
-        } else {
-          this.cargando = false;
-        }
-      },
-      error: () => this.cargando = false
-    });
+    this.cargarDatosGenerales();
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['calendarioId'] && this.calendarioId) {
+      this.cargarCalendarioPorId(this.calendarioId);
+    }
+  }
+
+  cargarDatosGenerales(): void {
     this.pacientesService.getPacientes().subscribe(res => this.pacientes = res);
     this.empleadosService.getEmpleados().subscribe(res => this.odontologos = res);
     this.obraSocialService.getObrasSociales().subscribe(res => this.obrasSociales = res);
+  }
+
+  cargarCalendarioPorId(id: number): void {
+    this.cargando = true;
+    this.calendarioService.obtenerCalendarioPorId(id).subscribe({
+      next: (cal) => {
+        this.calendario = cal;
+        this.actualizarCalendario();
+        this.generarHorarios();
+        this.obtenerTurnos();
+        this.verificarSemanasVecinas();
+        this.cargando = false;
+      },
+      error: () => this.cargando = false
+    });
   }
 
   actualizarCalendario(): void {
     this.diasSemana = [];
     for (let i = 0; i < 7; i++) {
       const dia = this.inicioSemana.clone().add(i, 'days').format('dddd DD/MM');
-      this.diasSemana.push(dia.charAt(0).toUpperCase() + dia.slice(1)); // Capitaliza
+      this.diasSemana.push(dia.charAt(0).toUpperCase() + dia.slice(1));
     }
   }
 
   generarHorarios(): void {
     this.horarios = [];
+    if (!this.calendario) return;
 
     const inicio = moment(this.calendario.horaInicioTurnos, 'HH:mm:ss');
     const fin = moment(this.calendario.horaFinTurnos, 'HH:mm:ss');
@@ -110,6 +122,8 @@ export class CalendarioComponent implements OnInit {
   }
 
   obtenerTurnos(): void {
+    if (!this.calendario?.id) return;
+
     const fechaInicioSemana = this.inicioSemana.clone().startOf('day').toISOString();
     const fechaFinSemana = this.inicioSemana.clone().add(6, 'days').endOf('day').toISOString();
 
@@ -121,10 +135,7 @@ export class CalendarioComponent implements OnInit {
         this.cargando = false;
         this.verificarSemanasVecinas();
       },
-      error: (error) => {
-        console.error('Error al cargar turnos de la semana:', error);
-        this.cargando = false;
-      }
+      error: () => this.cargando = false
     });
   }
 
@@ -150,7 +161,7 @@ export class CalendarioComponent implements OnInit {
     return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
   }
 
-  manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
+ manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
     if (!turno) return;
 
     if (!turno.disponible) {
@@ -216,7 +227,7 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-  abrirDialogoEditarTurno(turno: Turno): void {
+   abrirDialogoEditarTurno(turno: Turno): void {
     const dialogRef = this.dialog.open(EditarturnodialogComponent, {
       data: {
         pacienteId: turno.idPaciente!,
@@ -263,8 +274,6 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-
-
   cancelarTurno(turno: Turno): void {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -293,22 +302,8 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-  marcar(turno: Turno) {
-    const asistencia = {
-      asistio: !turno.asistio
-    };
 
-    this.turnosService.marcarAsistencia(turno.id, asistencia).subscribe({
-      next: () => {
-        turno.asistio = asistencia.asistio;
-      },
-      error: (err) => {
-        console.error('Error al actualizar asistencia:', err);
-        turno.asistio = !asistencia.asistio;
-      }
-    });
-  }
-
+  
 
   semanaAnterior(): void {
     this.inicioSemana = this.inicioSemana.clone().subtract(7, 'days');
@@ -323,6 +318,8 @@ export class CalendarioComponent implements OnInit {
   }
 
   verificarSemanasVecinas(): void {
+    if (!this.calendario?.id) return;
+
     const anteriorInicio = this.inicioSemana.clone().subtract(7, 'days').startOf('day').toISOString();
     const anteriorFin = this.inicioSemana.clone().subtract(1, 'days').endOf('day').toISOString();
 
