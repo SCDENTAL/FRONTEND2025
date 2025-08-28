@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Paciente } from '../interface/paciente';
 import { Observable } from 'rxjs';
 import { pacienteDTO } from '../interface/pacienteDTO';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environments.prod';
+
 
 
 @Injectable({

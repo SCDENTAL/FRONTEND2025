@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { CalendarioDTO } from '../interface/CalendarioDTO/calendariodto';
 import { CrearCalendarioDTO } from '../interface/CalendarioDTO/crearcalendariodto';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environments.prod';
+
 
 
 @Injectable({
