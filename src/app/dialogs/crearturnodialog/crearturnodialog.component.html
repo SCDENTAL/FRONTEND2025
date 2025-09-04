@@ -7,18 +7,6 @@
 
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Paciente</mat-label>
-      <!-- <mat-select formControlName="pacienteId">
-        <ngx-mat-select-search [formControl]="pacienteFiltroControl" placeholderLabel="Buscar paciente..."
-          noEntriesFoundLabel="No se encontraron pacientes">
-        </ngx-mat-select-search>
-
-        <mat-option *ngFor="let paciente of pacientesFiltrados" [value]="paciente.id">
-          <div class="opcion-paciente">
-            <div class="dni">{{ paciente.dni }}</div>
-            <div class="nombre">{{ paciente.nombre }} {{ paciente.apellido }}</div>
-          </div>
-        </mat-option>
-      </mat-select> -->
 
       <mat-select formControlName="pacienteId">
         <mat-select-trigger>
@@ -61,6 +49,12 @@
       <mat-error *ngIf="obraSocialId?.invalid && (obraSocialId?.dirty || obraSocialId?.touched)">
         La obra social es obligatoria
       </mat-error>
+    </mat-form-field>
+
+    <!-- 🔹 Nuevo campo de Observaciones -->
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Observaciones</mat-label>
+      <textarea matInput formControlName="observaciones" rows="3"></textarea>
     </mat-form-field>
 
     <div class="acciones">

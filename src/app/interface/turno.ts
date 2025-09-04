@@ -13,4 +13,7 @@ export interface Turno {
   idPaciente?: number;
   odontologoId?: number;
   obraSocialId?: number;
+  observaciones?: string; // 🔹 nuevo campo
+
+
 }

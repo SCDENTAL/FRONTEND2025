@@ -50,13 +50,16 @@ export class EditarturnodialogComponent implements OnInit {
       odontologoId: number,
       obraSocialId: number,
       Asistio: boolean,
+      Observaciones?: string,
     }
   ) {
     this.form = this.fb.group({
       pacienteId: [data.pacienteId, Validators.required],
       odontologoId: [data.odontologoId, Validators.required],
       obraSocialId: [data.obraSocialId, Validators.required],
-      asistio: [data.Asistio ?? false] // 👈 default en false
+      asistio: [data.Asistio ?? false],
+      observaciones: [data.Observaciones ?? '']
+
     });
   }
 

@@ -1,43 +1,47 @@
-
 <div class="container">
-<h2 mat-dialog-title>Editar Turno</h2>
+  <h2 mat-dialog-title>Editar Turno</h2>
 
-<form [formGroup]="form" (ngSubmit)="guardar()">
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Paciente</mat-label>
-    <mat-select formControlName="pacienteId">
-      <mat-option *ngFor="let paciente of pacientes" [value]="paciente.id">
-        {{ paciente.nombre }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Paciente</mat-label>
+      <mat-select formControlName="pacienteId">
+        <mat-option *ngFor="let paciente of pacientes" [value]="paciente.id">
+          {{ paciente.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Odontólogo</mat-label>
-    <mat-select formControlName="odontologoId">
-      <mat-option *ngFor="let odontologo of odontologos" [value]="odontologo.id">
-        {{ odontologo.nombre }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Odontólogo</mat-label>
+      <mat-select formControlName="odontologoId">
+        <mat-option *ngFor="let odontologo of odontologos" [value]="odontologo.id">
+          {{ odontologo.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Obra Social</mat-label>
-    <mat-select formControlName="obraSocialId">
-      <mat-option *ngFor="let obra of obrasSociales" [value]="obra.id">
-        {{ obra.nombre }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Obra Social</mat-label>
+      <mat-select formControlName="obraSocialId">
+        <mat-option *ngFor="let obra of obrasSociales" [value]="obra.id">
+          {{ obra.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-checkbox formControlName="asistio" style="margin-top: 12px;">¿Asistió?</mat-checkbox>
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Observaciones</mat-label>
+      <textarea matInput formControlName="observaciones" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="asistio" style="margin-top: 12px;">¿Asistió?</mat-checkbox>
 
 
-  <div class="acciones">
-    <button mat-raised-button color="primary" type="submit">Guardar</button>
+    <div class="acciones">
+      <button mat-raised-button color="primary" type="submit">Guardar</button>
 
-    <button mat-raised-button color="warn" (click)="cancelar()">Cancelar </button>
-        
-  </div>
-</form>
+      <button mat-raised-button color="warn" (click)="cancelar()">Cancelar </button>
+
+    </div>
+  </form>
 </div>
