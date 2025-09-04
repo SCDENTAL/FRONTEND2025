@@ -73,6 +73,7 @@ export class CrearturnodialogComponent implements OnInit {
       pacienteId: ['', Validators.required],
       odontologoId: ['', Validators.required],
       obraSocialId: ['', Validators.required],
+      observaciones: ['',]
     });
   }
 
@@ -105,11 +106,11 @@ export class CrearturnodialogComponent implements OnInit {
   }
 
   private filtrarPacientes(valor: string): Paciente[] {
-  const filtro = valor.toLowerCase();
-  return this.pacientes.filter(p =>
-    (`${p.nombre} ${p.apellido} ${p.dni?.toString() ?? ''}`).toLowerCase().includes(filtro)
-  );
-}
+    const filtro = valor.toLowerCase();
+    return this.pacientes.filter(p =>
+      (`${p.nombre} ${p.apellido} ${p.dni?.toString() ?? ''}`).toLowerCase().includes(filtro)
+    );
+  }
 
   private filtrarObrasSociales(valor: string): ObraSocial[] {
     const filtro = valor.toLowerCase();
@@ -122,17 +123,18 @@ export class CrearturnodialogComponent implements OnInit {
     if (this.form.valid) {
       const resultado = {
         ...this.form.value,
-        fechaHora: this.data.fechaHora
+        fechaHora: this.data.fechaHora,
+        observaciones: this.form.value.observaciones
       };
       this.dialogRef.close(resultado);
     }
   }
 
   obtenerTextoPacienteSeleccionado(): string {
-  const id = this.form.get('pacienteId')?.value;
-  const paciente = this.pacientes.find(p => p.id === id);
-  return paciente ? `${paciente.dni} - ${paciente.nombre} ${paciente.apellido}` : '';
-}
+    const id = this.form.get('pacienteId')?.value;
+    const paciente = this.pacientes.find(p => p.id === id);
+    return paciente ? `${paciente.dni} - ${paciente.nombre} ${paciente.apellido}` : '';
+  }
 
 
   cancelar(): void {
@@ -142,4 +144,5 @@ export class CrearturnodialogComponent implements OnInit {
   get obraSocialId() { return this.form.get('obraSocialId'); }
   get pacienteId() { return this.form.get('pacienteId'); }
   get odontologoId() { return this.form.get('odontologoId'); }
+  get observaciones() { return this.form.get('observaciones'); }
 }

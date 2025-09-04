@@ -3,4 +3,5 @@ export interface EditarTurnoDTO {
   IdOdontologo: number;
   IdObraSocial: number;
   // Asistio: boolean; 
+  Observaciones: string;
 }

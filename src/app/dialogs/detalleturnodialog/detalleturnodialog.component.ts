@@ -25,6 +25,7 @@ export class DetalleturnodialogComponent implements OnInit {
   paciente?: Paciente;
   odontologo?: Empleado;
   obraSocial?: ObraSocial;
+  
 
   constructor(
     private dialogRef: MatDialogRef<DetalleturnodialogComponent>,

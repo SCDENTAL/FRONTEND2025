@@ -190,7 +190,9 @@ export class CalendarioComponent implements OnInit, OnChanges {
         const datos: ReservarTurnoDTO = {
           IdPaciente: result.pacienteId,
           IdOdontologo: result.odontologoId,
-          IdObraSocial: result.obraSocialId
+          IdObraSocial: result.obraSocialId,
+          Observaciones: result.observaciones  // 🔹 lo agregamos
+
         };
 
         const turnoSeleccionado = this.turnos.find(t =>
@@ -233,7 +235,8 @@ export class CalendarioComponent implements OnInit, OnChanges {
         pacienteId: turno.idPaciente!,
         odontologoId: turno.odontologoId!,
         obraSocialId: turno.obraSocialId!,
-        Asistio: turno.asistio ?? false
+        Asistio: turno.asistio ?? false,      
+        Observaciones: turno.observaciones  
       }
     });
 
@@ -242,7 +245,8 @@ export class CalendarioComponent implements OnInit, OnChanges {
         const datosEditar: EditarTurnoDTO = {
           IdPaciente: result.pacienteId,
           IdOdontologo: result.odontologoId,
-          IdObraSocial: result.obraSocialId
+          IdObraSocial: result.obraSocialId,
+          Observaciones: result.observaciones          
         };
 
         this.turnosService.editarTurno(turno.id, datosEditar).subscribe({
