@@ -11,14 +11,11 @@ import { environment } from '../../environments/environments.prod';
 
 
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class TurnosService {
-  
+
   private apiUrl = `${environment.apiUrl}/Turno`;
 
   private httpOptions = {
@@ -28,17 +25,6 @@ export class TurnosService {
   };
 
   constructor(private http: HttpClient) { }
-
-  // getTurnos(): Observable<Turno[]> {
-  //   return this.http.get<Turno[]>(`${this.apiUrl}/mi-calendario`, this.httpOptions);
-  // }
-
-//     getTurnos(idCalendario: number): Observable<Turno[]> {
-//   return this.http.get<Turno[]>(
-//     `${this.apiUrl}/Calendario/${idCalendario}`,
-//     this.httpOptions
-//   );
-// }
 
   getTurnosDelDiaOdontologo(): Observable<TurnoOdontologo[]> {
     return this.http.get<TurnoOdontologo[]>(`${this.apiUrl}/mis-turnos-hoy`, this.httpOptions);
@@ -56,12 +42,13 @@ export class TurnosService {
     return this.http.put(`${this.apiUrl}/${turnoId}/asistencia`, dto);
   }
 
+  marcarConfirmacion(turnoId: number, dto: { confirmado: boolean }) {
+    return this.http.put(`${this.apiUrl}/${turnoId}/confirmacion`, dto);
+  }
 
   cancelarTurno(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/cancelar`, {}, this.httpOptions);
   }
-
-
 
   getTurnosPorCalendario(calendarioId: number): Observable<Turno[]> {
     return this.http.get<Turno[]>(`${this.apiUrl}/${calendarioId}`, this.httpOptions);

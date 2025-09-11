@@ -91,8 +91,7 @@ export class TurnosComponent implements OnInit {
       if (result.isConfirmed) {
         this.calendarioService.eliminarCalendario(this.calendario.id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'Calendario eliminado con éxito.', 'success');
-            // Actualizar lista y seleccionar siguiente calendario disponible
+            Swal.fire('Eliminado', 'Calendario eliminado con éxito.', 'success');            
             this.calendarios = this.calendarios.filter(c => c.id !== this.calendario.id);
             this.calendario = this.calendarios.length > 0 ? this.calendarios[0] : undefined!;
           },

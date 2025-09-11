@@ -1,21 +1,5 @@
-<!-- <div class="semana-nav">
-  <button (click)="semanaAnterior()" [disabled]="!hayTurnosSemanaAnterior || cargando">
-    ← Semana anterior
-  </button>
-
-  <span class="titulo-semana">
-    Semana del {{ inicioSemana.format('DD/MM') }}
-  </span>
-
-  <button (click)="semanaSiguiente()" [disabled]="!hayTurnosSemanaSiguiente || cargando">
-    Semana siguiente →
-  </button>
-</div> -->
-
 <div class="semana-nav">
-  <button class="btn-nav anterior" 
-          (click)="semanaAnterior()" 
-          [disabled]="!hayTurnosSemanaAnterior || cargando">
+  <button class="btn-nav anterior" (click)="semanaAnterior()" [disabled]="!hayTurnosSemanaAnterior || cargando">
     ← Semana anterior
   </button>
 
@@ -23,9 +7,7 @@
     Semana del {{ inicioSemana.format('DD/MM') }}
   </span>
 
-  <button class="btn-nav siguiente" 
-          (click)="semanaSiguiente()" 
-          [disabled]="!hayTurnosSemanaSiguiente || cargando">
+  <button class="btn-nav siguiente" (click)="semanaSiguiente()" [disabled]="!hayTurnosSemanaSiguiente || cargando">
     Semana siguiente →
   </button>
 </div>
@@ -51,14 +33,22 @@
                   <span class="disponible-desktop">Disponible</span>
                   <span class="disponible-mobile">Dispo</span>
                 </ng-container>
+
                 <ng-container *ngIf="!turno?.disponible && turno?.asistio">
                   <span class="asistio-desktop">Asistió</span>
                   <span class="asistio-mobile">Asist.</span>
                 </ng-container>
-                <ng-container *ngIf="!turno?.disponible && !turno?.asistio">
+
+                <ng-container *ngIf="!turno?.disponible && !turno?.asistio && turno?.confirmado">
+                  <span class="confirmado-desktop">Confirmado</span>
+                  <span class="confirmado-mobile">Conf.</span>
+                </ng-container>
+
+                <ng-container *ngIf="!turno?.disponible && !turno?.asistio && !turno?.confirmado">
                   <span class="reservado-desktop">Reservado</span>
                   <span class="reservado-mobile">Res.</span>
                 </ng-container>
+
               </span>
             </div>
           </ng-container>

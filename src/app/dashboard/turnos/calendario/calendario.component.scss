@@ -43,6 +43,16 @@
   background-color: #fff59d;
 }
 
+.turno-confirmado {
+  background-color: #d1c4e9; 
+  color: #4a148c;           
+  font-weight: bold;
+}
+
+.turno-confirmado:hover {
+  background-color: #b39ddb;
+}
+
 .sin-turno {
   background-color: #e0e0e0;
   color: #757575;
@@ -252,6 +262,32 @@ td {
     min-width: 60px;
   }
 }
+
+.confirmado-desktop,
+.confirmado-mobile {
+  display: inline;
+}
+
+/* En mobile escondemos el de escritorio */
+@media (max-width: 600px) {
+  .confirmado-desktop {
+    display: none;
+  }
+  .confirmado-mobile {
+    display: inline;
+  }
+}
+
+/* En desktop escondemos el de mobile */
+@media (min-width: 601px) {
+  .confirmado-desktop {
+    display: inline;
+  }
+  .confirmado-mobile {
+    display: none;
+  }
+}
+
 
 @media (min-width: 1400px) {
   .turno {
