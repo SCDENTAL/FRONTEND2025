@@ -1,4 +1,5 @@
 export interface Turno {
+  confirmado: boolean;
   asistio: boolean;
   disponible: boolean;
   fecha: string; 

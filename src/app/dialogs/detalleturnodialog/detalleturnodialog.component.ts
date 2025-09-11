@@ -9,6 +9,9 @@ import { EmpleadosService } from '../../service/empleados.service';
 import { ObraSocialService } from '../../service/obra-social.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import Swal from 'sweetalert2';
+import { TurnosService } from '../../service/turnos.service';
 
 @Component({
   selector: 'app-detalleturnodialog',
@@ -17,7 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './detalleturnodialog.component.scss',
   imports: [
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCheckboxModule
   ]
 })
 export class DetalleturnodialogComponent implements OnInit {
@@ -25,14 +29,15 @@ export class DetalleturnodialogComponent implements OnInit {
   paciente?: Paciente;
   odontologo?: Empleado;
   obraSocial?: ObraSocial;
-  
+
 
   constructor(
     private dialogRef: MatDialogRef<DetalleturnodialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { turno: Turno },
     private pacienteService: PacienteService,
     private empleadosService: EmpleadosService,
-    private obraSocialService: ObraSocialService
+    private obraSocialService: ObraSocialService,
+    private turnosService: TurnosService
   ) {
     this.turno = data.turno;
   }
@@ -56,6 +61,29 @@ export class DetalleturnodialogComponent implements OnInit {
       );
     }
   }
+
+  marcarConfirmacion(confirmado: boolean) {
+  console.log("Confirmación cambiada:", confirmado); // 👈 debug
+  
+  this.turnosService.marcarConfirmacion(this.turno.id, { confirmado }).subscribe(() => {
+    this.turno.confirmado = confirmado; // actualizar en memoria
+    Swal.fire({
+      title: confirmado ? 'Turno confirmado' : 'Confirmación quitada',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 1200
+    });
+  }, () => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo actualizar la confirmación.',
+      confirmButtonColor: '#d33'
+    });
+  });
+}
+
+
 
   editar(): void {
     this.dialogRef.close({ editar: true });

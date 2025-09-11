@@ -155,13 +155,24 @@ export class CalendarioComponent implements OnInit, OnChanges {
     return this.turnosMap[key];
   }
 
+  // estiloTurno(turno?: Turno): string {
+  //   if (!turno) return 'sin-turno turno';
+  //   if (turno.asistio) return 'turno turno-asistido';
+  //   return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
+  // }
+
   estiloTurno(turno?: Turno): string {
     if (!turno) return 'sin-turno turno';
     if (turno.asistio) return 'turno turno-asistido';
-    return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
+    if (turno.disponible) return 'turno turno-disponible';
+    if (turno.confirmado) return 'turno turno-confirmado';
+    return 'turno turno-ocupado';
   }
 
- manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
+
+
+
+  manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
     if (!turno) return;
 
     if (!turno.disponible) {
@@ -229,14 +240,14 @@ export class CalendarioComponent implements OnInit, OnChanges {
     });
   }
 
-   abrirDialogoEditarTurno(turno: Turno): void {
+  abrirDialogoEditarTurno(turno: Turno): void {
     const dialogRef = this.dialog.open(EditarturnodialogComponent, {
       data: {
         pacienteId: turno.idPaciente!,
         odontologoId: turno.odontologoId!,
         obraSocialId: turno.obraSocialId!,
-        Asistio: turno.asistio ?? false,      
-        Observaciones: turno.observaciones  
+        Asistio: turno.asistio ?? false,
+        Observaciones: turno.observaciones
       }
     });
 
@@ -246,7 +257,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
           IdPaciente: result.pacienteId,
           IdOdontologo: result.odontologoId,
           IdObraSocial: result.obraSocialId,
-          Observaciones: result.observaciones          
+          Observaciones: result.observaciones
         };
 
         this.turnosService.editarTurno(turno.id, datosEditar).subscribe({
@@ -307,7 +318,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
   }
 
 
-  
+
 
   semanaAnterior(): void {
     this.inicioSemana = this.inicioSemana.clone().subtract(7, 'days');

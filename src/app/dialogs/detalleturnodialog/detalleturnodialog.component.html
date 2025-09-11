@@ -15,7 +15,7 @@
 
     <div class="detalle-item">
       <span class="etiqueta">Paciente:</span>
-      <span>{{ paciente?.nombre  ?? 'No asignado' }}  {{ paciente?.apellido }}</span>
+      <span>{{ paciente?.nombre ?? 'No asignado' }} {{ paciente?.apellido }}</span>
     </div>
 
     <div class="detalle-item">
@@ -32,6 +32,14 @@
     <div class="detalle-item" *ngIf="turno.observaciones">
       <span class="etiqueta">Observaciones:</span>
       <span>{{ turno.observaciones }}</span>
+    </div>
+
+    <div>
+      <mat-checkbox [checked]="turno.confirmado" (change)="marcarConfirmacion($event.checked)"
+        style="margin-top: 12px;">
+        Confirmación
+      </mat-checkbox>
+
     </div>
   </div>
 
