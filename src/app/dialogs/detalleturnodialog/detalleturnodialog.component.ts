@@ -63,10 +63,9 @@ export class DetalleturnodialogComponent implements OnInit {
   }
 
   marcarConfirmacion(confirmado: boolean) {
-  console.log("Confirmación cambiada:", confirmado); // 👈 debug
-  
+    
   this.turnosService.marcarConfirmacion(this.turno.id, { confirmado }).subscribe(() => {
-    this.turno.confirmado = confirmado; // actualizar en memoria
+    this.turno.confirmado = confirmado; 
     Swal.fire({
       title: confirmado ? 'Turno confirmado' : 'Confirmación quitada',
       icon: 'success',
