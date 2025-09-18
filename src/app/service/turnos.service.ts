@@ -11,6 +11,7 @@ import { environment } from '../../environments/environments.prod';
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -59,6 +60,10 @@ export class TurnosService {
       `${this.apiUrl}/por-semana/${calendarioId}?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
       this.httpOptions
     );
+  }
+
+  getHistorialPaciente(idPaciente: number): Observable<TurnoDetalleDTO[]> {
+    return this.http.get<TurnoDetalleDTO[]>(`${this.apiUrl}/historial/${idPaciente}`);
   }
 
 

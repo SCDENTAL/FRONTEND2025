@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
 import { Paciente } from '../interface/paciente';
 import { Observable } from 'rxjs';
 import { pacienteDTO } from '../interface/pacienteDTO';
+import { PacienteDTO } from '../interface/PacienteDTO/PacienteDTO';
 import { environment } from '../../environments/environments.prod';
+
 
 
 
@@ -17,10 +18,10 @@ import { environment } from '../../environments/environments.prod';
 })
 export class PacienteService {
 
-  
+
   private apiUrl = `${environment.apiUrl}/pacientes`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getPacientes(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(this.apiUrl);
@@ -28,6 +29,12 @@ export class PacienteService {
 
   getPaciente(id: number): Observable<Paciente> {
     return this.http.get<Paciente>(`${this.apiUrl}/${id}`);
+  }
+
+  buscarPacientes(filtro: string): Observable<PacienteDTO[]> {
+    return this.http.get<PacienteDTO[]>(`${this.apiUrl}/buscar`, {
+      params: { filtro }
+    });
   }
 
   crearPaciente(paciente: pacienteDTO): Observable<Paciente> {
@@ -42,5 +49,5 @@ export class PacienteService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  
+
 }

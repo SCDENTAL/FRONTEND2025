@@ -8,6 +8,7 @@ import { ObrasSocialesComponent } from './dashboard/obras-sociales/obras-sociale
 import { EmpleadosComponent } from './dashboard/empleados/empleados.component';
 import { TurnosComponent } from './dashboard/turnos/turnos.component';
 import { RegistroComponent } from './registro/registro.component';
+import { HistorialComponent } from './dashboard/historial/historial.component';
 
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
             { path: 'pacientes', component: PacientesComponent },
             { path: 'obras-sociales', component: ObrasSocialesComponent },
             { path: 'turnos', component: TurnosComponent },
+            { path: 'historial', component: HistorialComponent },
             { path: '', redirectTo: 'pacientes', pathMatch: 'full' }
         ]
     },

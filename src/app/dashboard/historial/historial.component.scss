@@ -1,0 +1,70 @@
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.asistio {
+  color: #2e7d32; // verde
+  font-weight: 600;
+}
+
+.no-asistio {
+  color: #c62828; // rojo
+  font-weight: 600;
+}
+
+.confirmo {
+  color: #6a1b9a; // morado
+  font-weight: 600;
+}
+
+.reservo {
+  color: #0277bd; // azul
+  font-weight: 600;
+}
+
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1rem 0;
+  color: #333;
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 0.3rem;
+}
+
+mat-list {
+  background: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+}
+
+mat-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem 0;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #f0f4ff;
+  }
+
+  strong {
+    font-weight: 600;
+    margin-left: 1rem;
+  }
+}
+
+/* Colores de asistencia */
+.asistio {
+  color: #2e7d32; // verde
+}
+
+.no-asistio {
+  color: #c62828; // rojo
+}

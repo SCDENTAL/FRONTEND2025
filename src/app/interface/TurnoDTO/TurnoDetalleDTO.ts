@@ -1,10 +1,10 @@
 export interface TurnoDetalleDTO {
   id: number;
-  fecha: string; 
-  horario: string; 
-  fechaHora: string;
-  pacienteNombre: string;
+  fecha: string;
+  horario: string;
+  odontologo: string;
   obraSocial: string;
-  odontologoNombre: string;
-  estado: string;
+  confirmado: boolean;
+  asistio: boolean | null;
+  observaciones: string | null;
 }
