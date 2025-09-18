@@ -4,13 +4,6 @@ import { ObraSocial } from '../interface/obra-social';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environments.prod';
 
-
-
-
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })
