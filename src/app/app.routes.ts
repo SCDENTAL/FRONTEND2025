@@ -14,7 +14,7 @@ import { HistorialComponent } from './dashboard/historial/historial.component';
 export const routes: Routes = [
 
     { path: 'login', component: LoginComponent },
-    {path: 'registro', component: RegistroComponent},
+    // {path: 'registro', component: RegistroComponent},
     {
         path: 'admin',
         component: DashboardComponent,
