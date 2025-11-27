@@ -168,8 +168,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
 
   manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
     if (!turno) return;
-
-    // Si el turno NO está disponible → abrir detalles
+    
     if (!turno.disponible) {
       const dialogRef = this.dialog.open(DetalleturnodialogComponent, { data: { turno } });
       dialogRef.afterClosed().subscribe(result => {
@@ -179,73 +178,77 @@ export class CalendarioComponent implements OnInit, OnChanges {
       return;
     }
 
-    // --------------------------
-    // 🟢 CORRECCIÓN DE FECHA
-    // --------------------------
-    // fecha: "Jueves 01/01"
-    const [_, fechaStr] = fecha!.split(' '); // "01/01"
-    const [dia, mes] = fechaStr.split('/').map(Number);
-    const [h, m] = hora!.split(':').map(Number);
+    if (!fecha || !hora) return;
 
-    // Se usa inicioSemana porque contiene el año correcto
-    const fechaSeleccionada = moment(this.inicioSemana)
+    const indexDia = this.diasSemana.indexOf(fecha);
+    if (indexDia === -1) {
+      console.error('No se pudo determinar el índice del día para:', fecha);
+      return;
+    }
+
+    const [h, m] = hora.split(':').map(Number);
+
+    const fechaSeleccionada = this.inicioSemana.clone()
+      .add(indexDia, 'days')          
       .set({
-        date: dia,
-        month: mes - 1,
         hour: h,
         minute: m,
-        second: 0
+        second: 0,
+        millisecond: 0
       })
       .toDate();
-    // --------------------------
 
     const dialogRef = this.dialog.open(CrearturnodialogComponent, {
       data: { fechaHora: fechaSeleccionada }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const datos: ReservarTurnoDTO = {
-          IdPaciente: result.pacienteId,
-          IdOdontologo: result.odontologoId,
-          IdObraSocial: result.obraSocialId,
-          Observaciones: result.observaciones
-        };
+      if (!result) return;
 
-        // Buscar el turno exacto en la BD
-        const turnoSeleccionado = this.turnos.find(t =>
-          moment(t.fecha).isSame(moment(result.fechaHora), 'day') &&
-          moment(t.horario, 'HH:mm:ss').format('HH:mm') === moment(result.fechaHora).format('HH:mm')
-        );
+      const datos: ReservarTurnoDTO = {
+        IdPaciente: result.pacienteId,
+        IdOdontologo: result.odontologoId,
+        IdObraSocial: result.obraSocialId,
+        Observaciones: result.observaciones
+      };
 
-        if (!turnoSeleccionado) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontró el turno en la base de datos.',
-            confirmButtonColor: '#d33'
-          });
-          return;
-        }
+      const keyFecha = moment(result.fechaHora).format('DD/MM');
+      const keyHora = moment(result.fechaHora).format('HH:mm');
+      const key = `${keyFecha}_${keyHora}`;
 
-        this.turnosService.reservarTurno(turnoSeleccionado.id, datos).subscribe(() => {
+      const turnoSeleccionado = this.turnosMap[key];
+
+      if (!turnoSeleccionado) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró el turno en la base de datos.',
+          confirmButtonColor: '#d33'
+        });
+        return;
+      }
+
+      this.turnosService.reservarTurno(turnoSeleccionado.id, datos).subscribe({
+        next: () => {
           this.obtenerTurnos();
           Swal.fire({
             title: 'Turno reservado',
             icon: 'success',
             showConfirmButton: false
           });
-        }, () => {
+        },
+        error: () => {
           Swal.fire({
             icon: 'error',
             title: 'Error',
             text: 'No se pudo reservar el turno.',
             confirmButtonColor: '#d33'
           });
-        });
-      }
+        }
+      });
     });
   }
+
 
 
   abrirDialogoEditarTurno(turno: Turno): void {
