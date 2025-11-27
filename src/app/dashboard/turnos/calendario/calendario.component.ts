@@ -36,7 +36,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class CalendarioComponent implements OnInit, OnChanges {
 
-  @Input() calendarioId!: number; // 👈 recibimos el ID del calendario
+  @Input() calendarioId!: number;
 
   diasSemana: string[] = [];
   horarios: string[] = [];
@@ -155,12 +155,6 @@ export class CalendarioComponent implements OnInit, OnChanges {
     return this.turnosMap[key];
   }
 
-  // estiloTurno(turno?: Turno): string {
-  //   if (!turno) return 'sin-turno turno';
-  //   if (turno.asistio) return 'turno turno-asistido';
-  //   return turno.disponible ? 'turno turno-disponible' : 'turno turno-ocupado';
-  // }
-
   estiloTurno(turno?: Turno): string {
     if (!turno) return 'sin-turno turno';
     if (turno.asistio) return 'turno turno-asistido';
@@ -175,6 +169,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
   manejarClick(turno?: Turno, fecha?: string, hora?: string): void {
     if (!turno) return;
 
+    // Si el turno NO está disponible → abrir detalles
     if (!turno.disponible) {
       const dialogRef = this.dialog.open(DetalleturnodialogComponent, { data: { turno } });
       dialogRef.afterClosed().subscribe(result => {
@@ -184,13 +179,25 @@ export class CalendarioComponent implements OnInit, OnChanges {
       return;
     }
 
-    const fechaSeleccionada = moment(fecha!.split(' ')[1], 'DD/MM')
+    // --------------------------
+    // 🟢 CORRECCIÓN DE FECHA
+    // --------------------------
+    // fecha: "Jueves 01/01"
+    const [_, fechaStr] = fecha!.split(' '); // "01/01"
+    const [dia, mes] = fechaStr.split('/').map(Number);
+    const [h, m] = hora!.split(':').map(Number);
+
+    // Se usa inicioSemana porque contiene el año correcto
+    const fechaSeleccionada = moment(this.inicioSemana)
       .set({
-        hour: parseInt(hora!.split(':')[0]),
-        minute: parseInt(hora!.split(':')[1]),
-        second: 0,
-        year: moment(this.calendario.fechaInicio).year()
-      }).toDate();
+        date: dia,
+        month: mes - 1,
+        hour: h,
+        minute: m,
+        second: 0
+      })
+      .toDate();
+    // --------------------------
 
     const dialogRef = this.dialog.open(CrearturnodialogComponent, {
       data: { fechaHora: fechaSeleccionada }
@@ -202,10 +209,10 @@ export class CalendarioComponent implements OnInit, OnChanges {
           IdPaciente: result.pacienteId,
           IdOdontologo: result.odontologoId,
           IdObraSocial: result.obraSocialId,
-          Observaciones: result.observaciones  // 🔹 lo agregamos
-
+          Observaciones: result.observaciones
         };
 
+        // Buscar el turno exacto en la BD
         const turnoSeleccionado = this.turnos.find(t =>
           moment(t.fecha).isSame(moment(result.fechaHora), 'day') &&
           moment(t.horario, 'HH:mm:ss').format('HH:mm') === moment(result.fechaHora).format('HH:mm')
@@ -239,6 +246,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
       }
     });
   }
+
 
   abrirDialogoEditarTurno(turno: Turno): void {
     const dialogRef = this.dialog.open(EditarturnodialogComponent, {
