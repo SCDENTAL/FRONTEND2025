@@ -34,7 +34,7 @@ export class CalendarioService {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
   }
 
-  extenderCalendario(id: number, dto: { fechaFin: string }): Observable<void> {
+  extenderCalendario(id: number, dto: { fechaFin: string, excluirDomingo: boolean }): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}/extender`, dto);
   }
   

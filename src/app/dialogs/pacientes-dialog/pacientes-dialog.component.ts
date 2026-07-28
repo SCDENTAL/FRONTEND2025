@@ -31,6 +31,9 @@ import { ObraSocialService } from '../../service/obra-social.service';
   styleUrl: './pacientes-dialog.component.scss'
 })
 export class PacientesDialogComponent implements OnInit {
+
+  isSaving = false;
+
   form!: FormGroup;
   obrasSociales: ObraSocial[] = [];
   obrasSocialesFiltradas: ObraSocial[] = [];
@@ -42,7 +45,7 @@ export class PacientesDialogComponent implements OnInit {
     private pacienteService: PacienteService,
     private dialogRef: MatDialogRef<PacientesDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { paciente?: Paciente }
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.obraSocialService.getObrasSociales().subscribe({
@@ -91,8 +94,10 @@ export class PacientesDialogComponent implements OnInit {
   }
 
   onSave(): void {
-    if (this.form.invalid) return;
+    // 2. Si el formulario es inválido o ya estamos guardando, bloqueamos la ejecución
+    if (this.form.invalid || this.isSaving) return;
 
+    this.isSaving = true; // 3. Activamos el estado de guardado
     const formValue = this.form.value;
 
     const pacienteDTO = {
@@ -116,6 +121,7 @@ export class PacientesDialogComponent implements OnInit {
         this.dialogRef.close(true);
       },
       error: () => {
+        this.isSaving = false; // 4. MUY IMPORTANTE: Si hay error, liberamos el botón para reintentar
         const mensaje = this.data?.paciente ? 'editar' : 'crear';
         Swal.fire('Error', `No se pudo ${mensaje} el paciente`, 'error');
       }

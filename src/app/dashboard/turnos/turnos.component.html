@@ -7,6 +7,10 @@
         Crear calendario
       </button>
 
+      <button mat-raised-button (click)="extenderCalendario()" [disabled]="!calendario">
+        Extender calendario
+      </button>
+
       <button mat-raised-button color="warn" (click)="eliminarCalendario()" [disabled]="!calendario">
         Eliminar calendario
       </button>
