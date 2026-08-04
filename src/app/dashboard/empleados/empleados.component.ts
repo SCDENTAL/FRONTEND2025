@@ -90,7 +90,7 @@ export class EmpleadosComponent implements OnInit, AfterViewInit {
   }
 
   agregarEmpleado() {
-    const dialogRef = this.dialog.open(EmpleadosDialogComponent, {});
+    const dialogRef = this.dialog.open(EmpleadosDialogComponent, { data: {} });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

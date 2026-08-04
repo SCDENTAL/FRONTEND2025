@@ -69,7 +69,7 @@ export class PacientesComponent implements OnInit, AfterViewInit {
   }
 
   agregarPaciente() {
-    const dialogRef = this.dialog.open(PacientesDialogComponent, {});
+    const dialogRef = this.dialog.open(PacientesDialogComponent, { data: {} });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.cargarPacientes();
