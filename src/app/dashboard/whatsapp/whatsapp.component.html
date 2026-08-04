@@ -1,0 +1,233 @@
+<div class="whatsapp-container">
+  <div class="toolbar-header">
+    <h1>WhatsApp</h1>
+    <span class="powered-by">Meta Business API</span>
+  </div>
+
+  <!-- Instructivo (se ve siempre) -->
+  <div class="guide-sections">
+
+    <div class="guide-card">
+      <h3>Cómo funciona</h3>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <span class="step-title">Se reserva un turno</span>
+            <span class="step-desc">El turno aparece en el calendario como <strong>Reservado</strong>.</span>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <span class="step-title">Se envía recordatorio (24hs antes)</span>
+            <span class="step-desc">El sistema envía automáticamente un WhatsApp al paciente y el turno pasa a <strong>Enviado</strong>.</span>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <span class="step-title">El paciente responde</span>
+            <span class="step-desc">Si responde <strong>1</strong> el turno se confirma. Si responde <strong>2</strong> el turno se cancela y el horario queda libre.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3>Respuestas del paciente</h3>
+      <div class="response-list">
+        <div class="response-item confirmar">
+          <div class="response-badge ok">1</div>
+          <div class="response-info">
+            <span class="response-title">Confirmar asistencia</span>
+            <span class="response-aliases">También acepta: "CONFIRMAR", "SI", "SÍ"</span>
+          </div>
+        </div>
+        <div class="response-item cancelar">
+          <div class="response-badge danger">2</div>
+          <div class="response-info">
+            <span class="response-title">No puede asistir</span>
+            <span class="response-aliases">También acepta: "NO PUEDO", "CANCELAR", "NO"</span>
+          </div>
+        </div>
+      </div>
+      <p class="detail-note">
+        Cuando el paciente responde "2", todos sus turnos próximos se cancelan automáticamente y los horarios quedan disponibles para otros pacientes.
+      </p>
+    </div>
+
+    <div class="guide-card">
+      <h3>Colores en el calendario</h3>
+      <div class="color-legend">
+        <div class="color-item">
+          <span class="color-swatch disponible"></span>
+          <span class="color-label">Disponible</span>
+          <span class="color-desc">Horario libre</span>
+        </div>
+        <div class="color-item">
+          <span class="color-swatch reservado"></span>
+          <span class="color-label">Reservado</span>
+          <span class="color-desc">Turno asignado, sin recordatorio enviado</span>
+        </div>
+        <div class="color-item">
+          <span class="color-swatch enviado"></span>
+          <span class="color-label">Enviado</span>
+          <span class="color-desc">Recordatorio enviado, esperando respuesta</span>
+        </div>
+        <div class="color-item">
+          <span class="color-swatch confirmado"></span>
+          <span class="color-label">Confirmado</span>
+          <span class="color-desc">El paciente confirmó su asistencia</span>
+        </div>
+        <div class="color-item">
+          <span class="color-swatch asistio"></span>
+          <span class="color-label">Asistió</span>
+          <span class="color-desc">El paciente asistió al turno</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Estadísticas (requieren backend) -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="stats && !loading" class="stats-content">
+
+    <div class="cards-grid">
+      <div class="stat-card">
+        <div class="card-icon enviados">
+          <mat-icon>send</mat-icon>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.mensajesMesActual }}</span>
+          <span class="card-label">Mensajes este mes</span>
+          <span class="card-detail" *ngIf="variacionMensual !== null"
+                [class.positive]="variacionMensual >= 0"
+                [class.negative]="variacionMensual < 0">
+            {{ variacionMensual >= 0 ? '+' : '' }}{{ variacionMensual }}% vs mes anterior
+          </span>
+          <span class="card-detail" *ngIf="variacionMensual === null">
+            {{ stats.mensajesMesAnterior }} el mes anterior
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="card-icon confirmados">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.turnosConfirmadosMesActual }}</span>
+          <span class="card-label">Confirmados este mes</span>
+          <span class="card-detail">
+            {{ tasaConfirmacion }}% tasa de confirmación
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="card-icon costo">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="card-info">
+          <span class="card-value">USD {{ stats.costoMesActual | number:'1.2-2' }}</span>
+          <span class="card-label">Costo este mes</span>
+          <span class="card-detail">
+            USD {{ stats.costoPorMensaje }} por mensaje
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="card-icon proyeccion">
+          <mat-icon>trending_up</mat-icon>
+        </div>
+        <div class="card-info">
+          <span class="card-value">USD {{ stats.costoEstimadoMensual | number:'1.2-2' }}</span>
+          <span class="card-label">Estimación mensual</span>
+          <span class="card-detail">
+            ~{{ stats.promedioMensajesMensual }} mensajes/mes promedio
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-sections">
+      <div class="detail-card">
+        <h3>Cobertura de pacientes</h3>
+        <div class="progress-section">
+          <div class="progress-bar-container">
+            <div class="progress-bar" [style.width.%]="coberturaTelefono"></div>
+          </div>
+          <span class="progress-label">{{ coberturaTelefono }}%</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Con teléfono</span>
+          <span class="detail-value ok">{{ stats.pacientesConTelefono }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Sin teléfono</span>
+          <span class="detail-value warn">{{ stats.pacientesSinTelefono }}</span>
+        </div>
+        <p class="detail-note">
+          Los pacientes sin teléfono no reciben recordatorios automáticos.
+        </p>
+      </div>
+
+      <div class="detail-card">
+        <h3>Resumen de uso</h3>
+        <div class="detail-row">
+          <span class="detail-key">Total mensajes enviados</span>
+          <span class="detail-value">{{ stats.mensajesTotal }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Turnos reservados este mes</span>
+          <span class="detail-value">{{ stats.turnosReservadosMesActual }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Mensajes mes anterior</span>
+          <span class="detail-value">{{ stats.mensajesMesAnterior }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Costo por mensaje (utility)</span>
+          <span class="detail-value">USD {{ stats.costoPorMensaje }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card pricing-card">
+        <h3>Referencia de precios Meta</h3>
+        <div class="pricing-table">
+          <div class="pricing-row header">
+            <span>Tipo</span>
+            <span>Costo/msg</span>
+            <span>Ejemplo 500 msg</span>
+          </div>
+          <div class="pricing-row active">
+            <span>Utility (recordatorios)</span>
+            <span>USD 0.0315</span>
+            <span>USD 15.75</span>
+          </div>
+          <div class="pricing-row">
+            <span>Marketing</span>
+            <span>USD 0.0625</span>
+            <span>USD 31.25</span>
+          </div>
+          <div class="pricing-row">
+            <span>Service (paciente inicia)</span>
+            <span>USD 0.0315</span>
+            <span>USD 15.75</span>
+          </div>
+        </div>
+        <p class="detail-note">
+          Precios para Argentina/LATAM. Los recordatorios son tipo "utility".
+          Las primeras 1.000 conversaciones de servicio (iniciadas por el paciente) son gratis por mes.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -120,10 +120,11 @@ export class PacientesDialogComponent implements OnInit {
         Swal.fire('Éxito', `Paciente ${mensaje} con éxito`, 'success');
         this.dialogRef.close(true);
       },
-      error: () => {
-        this.isSaving = false; // 4. MUY IMPORTANTE: Si hay error, liberamos el botón para reintentar
-        const mensaje = this.data?.paciente ? 'editar' : 'crear';
-        Swal.fire('Error', `No se pudo ${mensaje} el paciente`, 'error');
+      error: (err) => {
+        this.isSaving = false;
+        const fallback = this.data?.paciente ? 'No se pudo editar el paciente' : 'No se pudo crear el paciente';
+        const mensaje = err?.error?.error || fallback;
+        Swal.fire('Error', mensaje, 'error');
       }
     });
   }

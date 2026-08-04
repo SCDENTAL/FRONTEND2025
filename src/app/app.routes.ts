@@ -9,6 +9,7 @@ import { EmpleadosComponent } from './dashboard/empleados/empleados.component';
 import { TurnosComponent } from './dashboard/turnos/turnos.component';
 import { RegistroComponent } from './registro/registro.component';
 import { HistorialComponent } from './dashboard/historial/historial.component';
+import { WhatsappComponent } from './dashboard/whatsapp/whatsapp.component';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
             { path: 'obras-sociales', component: ObrasSocialesComponent },
             { path: 'turnos', component: TurnosComponent },
             { path: 'historial', component: HistorialComponent },
+            { path: 'whatsapp', component: WhatsappComponent },
             { path: '', redirectTo: 'pacientes', pathMatch: 'full' }
         ]
     },

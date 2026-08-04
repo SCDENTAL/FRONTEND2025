@@ -7,9 +7,11 @@ import { Empleado } from '../../interface/empleado';
 import { PacienteService } from '../../service/paciente.service';
 import { EmpleadosService } from '../../service/empleados.service';
 import { ObraSocialService } from '../../service/obra-social.service';
+import { WhatsappService } from '../../service/whatsapp.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import Swal from 'sweetalert2';
 import { TurnosService } from '../../service/turnos.service';
 
@@ -21,7 +23,8 @@ import { TurnosService } from '../../service/turnos.service';
   imports: [
     CommonModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatIconModule
   ]
 })
 export class DetalleturnodialogComponent implements OnInit {
@@ -29,7 +32,7 @@ export class DetalleturnodialogComponent implements OnInit {
   paciente?: Paciente;
   odontologo?: Empleado;
   obraSocial?: ObraSocial;
-
+  enviandoWhatsApp = false;
 
   constructor(
     private dialogRef: MatDialogRef<DetalleturnodialogComponent>,
@@ -37,7 +40,8 @@ export class DetalleturnodialogComponent implements OnInit {
     private pacienteService: PacienteService,
     private empleadosService: EmpleadosService,
     private obraSocialService: ObraSocialService,
-    private turnosService: TurnosService
+    private turnosService: TurnosService,
+    private whatsappService: WhatsappService
   ) {
     this.turno = data.turno;
   }
@@ -83,6 +87,37 @@ export class DetalleturnodialogComponent implements OnInit {
 }
 
 
+
+  getEstadoWhatsApp(): { texto: string; clase: string } {
+    if (this.turno.confirmado) return { texto: 'Confirmado', clase: 'wa-confirmado' };
+    if (this.turno.mensajeConfirmacionEnviado) return { texto: 'Enviado - Esperando respuesta', clase: 'wa-enviado' };
+    return { texto: 'No enviado', clase: 'wa-pendiente' };
+  }
+
+  enviarWhatsApp(): void {
+    this.enviandoWhatsApp = true;
+    this.whatsappService.enviarRecordatorio(this.turno.id).subscribe({
+      next: () => {
+        this.turno.mensajeConfirmacionEnviado = true;
+        this.enviandoWhatsApp = false;
+        Swal.fire({
+          title: 'Mensaje enviado',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1200
+        });
+      },
+      error: (err) => {
+        this.enviandoWhatsApp = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.error?.mensaje || err.error?.message || 'No se pudo enviar el mensaje.',
+          confirmButtonColor: '#d33'
+        });
+      }
+    });
+  }
 
   editar(): void {
     this.dialogRef.close({ editar: true });

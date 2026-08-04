@@ -51,7 +51,21 @@
   }
 }
 
-@media (max-width: 768px) { 
+.wa-confirmado {
+  color: #4a148c;
+  font-weight: 600;
+}
+
+.wa-enviado {
+  color: #e65100;
+  font-weight: 600;
+}
+
+.wa-pendiente {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
 
   [mat-dialog-actions] {
     flex-direction: column;

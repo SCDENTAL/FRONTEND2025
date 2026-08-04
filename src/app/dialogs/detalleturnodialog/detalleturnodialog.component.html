@@ -28,10 +28,14 @@
       <span>{{ obraSocial?.nombre ?? 'No asignada' }}</span>
     </div>
 
-    <!-- 🔹 Nuevo campo Observaciones -->
     <div class="detalle-item" *ngIf="turno.observaciones">
       <span class="etiqueta">Observaciones:</span>
       <span>{{ turno.observaciones }}</span>
+    </div>
+
+    <div class="detalle-item">
+      <span class="etiqueta">WhatsApp:</span>
+      <span [ngClass]="getEstadoWhatsApp().clase">{{ getEstadoWhatsApp().texto }}</span>
     </div>
 
     <div>
@@ -39,11 +43,16 @@
         style="margin-top: 12px;">
         Confirmación
       </mat-checkbox>
-
     </div>
   </div>
 
   <div mat-dialog-actions align="end">
+    <button (click)="enviarWhatsApp()" mat-raised-button
+      [disabled]="enviandoWhatsApp || turno.disponible || !paciente"
+      style="background-color: #25D366; color: white;">
+      <mat-icon>send</mat-icon>
+      {{ enviandoWhatsApp ? 'Enviando...' : 'Enviar WhatsApp' }}
+    </button>
     <button (click)="cerrar()" mat-raised-button color="primary" type="submit">Cerrar</button>
     <button (click)="editar()" mat-raised-button color="primary" type="submit">Editar</button>
     <button (click)="cancelar()" mat-raised-button color="primary" type="submit">Cancelar turno</button>

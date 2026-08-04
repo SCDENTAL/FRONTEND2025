@@ -67,14 +67,34 @@ export class CrearturnodialogComponent implements OnInit {
     private empleadosService: EmpleadosService,
     private obraSocialesService: ObraSocialService,
     private dialogRef: MatDialogRef<CrearturnodialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { fechaHora: Date, turno?: ReservarTurnoDTO }
+    @Inject(MAT_DIALOG_DATA) public data: { fechaHora: Date, turno?: ReservarTurnoDTO, intervaloMinutos?: number }
   ) {
+    this.generarOpcionesDuracion();
     this.form = this.fb.group({
       pacienteId: ['', Validators.required],
       odontologoId: ['', Validators.required],
       obraSocialId: ['', Validators.required],
-      observaciones: ['',]
+      observaciones: ['',],
+      cantidadSlots: [1]
     });
+  }
+
+  opcionesDuracion: { valor: number, texto: string }[] = [];
+
+  private generarOpcionesDuracion(): void {
+    const intervalo = this.data.intervaloMinutos || 30;
+    const maxSlots = 8;
+    this.opcionesDuracion = [];
+    for (let i = 1; i <= maxSlots; i++) {
+      const minutos = intervalo * i;
+      const horas = Math.floor(minutos / 60);
+      const mins = minutos % 60;
+      let texto = '';
+      if (horas > 0 && mins > 0) texto = `${horas}h ${mins}min`;
+      else if (horas > 0) texto = `${horas}h`;
+      else texto = `${mins}min`;
+      this.opcionesDuracion.push({ valor: i, texto });
+    }
   }
 
   ngOnInit(): void {
@@ -124,7 +144,8 @@ export class CrearturnodialogComponent implements OnInit {
       const resultado = {
         ...this.form.value,
         fechaHora: this.data.fechaHora,
-        observaciones: this.form.value.observaciones
+        observaciones: this.form.value.observaciones,
+        cantidadSlots: this.form.value.cantidadSlots || 1
       };
       this.dialogRef.close(resultado);
     }

@@ -1,0 +1,40 @@
+<div class="extender-dialog">
+  <div class="header">
+    <mat-icon class="header-icon">date_range</mat-icon>
+    <h2>Extender Calendario</h2>
+  </div>
+
+  <div class="info-actual">
+    <span class="label">Fecha fin actual</span>
+    <span class="valor">{{ fechaFinActual }}</span>
+  </div>
+
+  <div class="calendario-container">
+    <mat-calendar
+      [selected]="fechaSeleccionada"
+      [minDate]="fechaMinima"
+      [dateFilter]="filtroFechas"
+      (selectedChange)="fechaSeleccionada = $event"
+      [startAt]="fechaMinima">
+    </mat-calendar>
+  </div>
+
+  <div *ngIf="fechaSeleccionada" class="fecha-nueva">
+    <mat-icon>event_available</mat-icon>
+    <span>Nueva fecha fin: <strong>{{ fechaSeleccionada | date:'dd/MM/yyyy' }}</strong></span>
+  </div>
+
+  <div class="opciones">
+    <mat-checkbox [(ngModel)]="excluirDomingo" color="primary">
+      Excluir domingos
+    </mat-checkbox>
+  </div>
+
+  <div class="acciones">
+    <button mat-stroked-button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+    <button mat-raised-button class="btn-confirmar" (click)="confirmar()" [disabled]="!fechaSeleccionada">
+      <mat-icon>check</mat-icon>
+      Extender
+    </button>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="container">
+  <h2 mat-dialog-title>Detalle del turno</h2>
+
+  <div mat-dialog-content class="detalle-container">
+    <div class="detalle-item">
+      <span class="etiqueta">Fecha:</span>
+      <span>{{ turno.fecha | date: 'dd/MM/yyyy' }}</span>
+    </div>
+
+    <div class="detalle-item">
+      <span class="etiqueta">Horario:</span>
+      <span>{{ turno.horario | slice:0:5 }}</span>
+    </div>
+
+    <div class="detalle-item">
+      <span class="etiqueta">Odontólogo:</span>
+      <span>{{ turno.odontologo }}</span>
+    </div>
+
+    <div class="detalle-item">
+      <span class="etiqueta">Obra Social:</span>
+      <span>{{ turno.obraSocial || 'No asignada' }}</span>
+    </div>
+
+    <div class="detalle-item">
+      <span class="etiqueta">Estado:</span>
+      <span [ngClass]="getEstado().clase">{{ getEstado().texto }}</span>
+    </div>
+
+    <div class="detalle-item observaciones-item">
+      <span class="etiqueta">Observaciones:</span>
+      <span class="observaciones-texto">{{ turno.observaciones || 'Sin observaciones' }}</span>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button (click)="cerrar()" mat-raised-button color="primary">Cerrar</button>
+  </div>
+</div>

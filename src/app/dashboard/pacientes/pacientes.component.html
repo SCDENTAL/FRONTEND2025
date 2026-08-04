@@ -1,21 +1,24 @@
 <div class="pacientes-container">
-  <h1>Pacientes</h1>
-
-  <div class="acciones">
-    <button mat-raised-button color="primary" (click)="agregarPaciente()">
-      <mat-icon>add</mat-icon>
-      Agregar Paciente
-    </button>
+  <div class="toolbar-header">
+    <div class="toolbar-left">
+      <h1>Pacientes</h1>
+      <span class="badge-count">{{ dataSource.filteredData.length }}</span>
+    </div>
+    <div class="toolbar-right">
+      <mat-form-field appearance="outline" class="buscador">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          (keyup)="aplicarFiltro($event)"
+          placeholder="Buscar paciente..."
+        />
+      </mat-form-field>
+      <button mat-raised-button class="btn-agregar" (click)="agregarPaciente()">
+        <mat-icon>add</mat-icon>
+        Agregar Paciente
+      </button>
+    </div>
   </div>
-
-  <mat-form-field appearance="outline" class="buscador">
-    <mat-label>Buscar</mat-label>
-    <input
-      matInput
-      (keyup)="aplicarFiltro($event)"
-      placeholder="Filtrar paciente"
-    />
-  </mat-form-field>
 
   <div class="tabla-container mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort class="tabla">
@@ -49,16 +52,20 @@
         <th mat-header-cell *matHeaderCellDef>Opciones</th>
         <td mat-cell *matCellDef="let paciente">
           <div class="botones-opciones">
-            <button mat-button color="accent" (click)="editarPaciente(paciente)">Editar</button>
-            <button mat-button color="warn" (click)="borrarPaciente(paciente.id)">Borrar</button>
+            <button mat-icon-button class="btn-editar" (click)="editarPaciente(paciente)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="btn-borrar" (click)="borrarPaciente(paciente.id)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
           </div>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSize]="50" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

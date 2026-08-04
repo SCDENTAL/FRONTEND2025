@@ -1,44 +1,51 @@
 <div class="obras-container">
-  <h1>Obras Sociales</h1>
-
-  <div class="acciones">
-    <button mat-raised-button color="primary" (click)="agregarObraSocial()">
-      <mat-icon>add</mat-icon>
-      Agregar Obra Social
-    </button>
+  <div class="toolbar-header">
+    <div class="toolbar-left">
+      <h1>Obras Sociales</h1>
+      <span class="badge-count">{{ dataSource.filteredData.length }}</span>
+    </div>
+    <div class="toolbar-right">
+      <mat-form-field appearance="outline" class="buscador">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          (keyup)="aplicarFiltro($event)"
+          placeholder="Buscar obra social..."
+        />
+      </mat-form-field>
+      <button mat-raised-button class="btn-agregar" (click)="agregarObraSocial()">
+        <mat-icon>add</mat-icon>
+        Agregar Obra Social
+      </button>
+    </div>
   </div>
 
-  <mat-form-field appearance="outline" class="buscador">
-    <mat-label>Buscar</mat-label>
-    <input
-      matInput
-      (keyup)="aplicarFiltro($event)"
-      placeholder="Filtrar obra social"
-    />
-  </mat-form-field>
-
   <div class="tabla-container mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort class="tabla">
-      
+    <table mat-table [dataSource]="dataSource" matSort>
+
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-        <td mat-cell *matCellDef="let obra"> {{ obra.nombre }} </td>
+        <td mat-cell *matCellDef="let obra">{{ obra.nombre }}</td>
       </ng-container>
 
       <ng-container matColumnDef="opciones">
         <th mat-header-cell *matHeaderCellDef>Opciones</th>
         <td mat-cell *matCellDef="let obra">
           <div class="botones-opciones">
-            <button mat-button color="accent" (click)="editarObra(obra)">Editar</button>
-            <button mat-button color="warn" (click)="borrarObra(obra.id)">Borrar</button>
+            <button mat-icon-button class="btn-editar" (click)="editarObra(obra)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="btn-borrar" (click)="borrarObra(obra.id)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
           </div>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[ 10, 25]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSize]="50" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

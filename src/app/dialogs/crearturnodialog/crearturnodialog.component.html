@@ -51,7 +51,15 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- 🔹 Nuevo campo de Observaciones -->
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Duración</mat-label>
+      <mat-select formControlName="cantidadSlots">
+        <mat-option *ngFor="let op of opcionesDuracion" [value]="op.valor">
+          {{ op.texto }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Observaciones</mat-label>
       <textarea matInput formControlName="observaciones" rows="3"></textarea>

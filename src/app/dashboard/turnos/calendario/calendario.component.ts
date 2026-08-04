@@ -22,6 +22,8 @@ import { PacienteService } from '../../../service/paciente.service';
 import { EmpleadosService } from '../../../service/empleados.service';
 import { ObraSocialService } from '../../../service/obra-social.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FeriadosArgentinaService } from '../../../service/feriados-argentina.service';
 
 @Component({
   selector: 'app-calendario',
@@ -29,7 +31,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   templateUrl: './calendario.component.html',
   styleUrls: ['./calendario.component.scss']
@@ -37,12 +40,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class CalendarioComponent implements OnInit, OnChanges {
 
   @Input() calendarioId!: number;
+  @Input() highlightFecha: string | null = null;
+  @Input() highlightHorario: string | null = null;
 
   diasSemana: string[] = [];
   horarios: string[] = [];
   turnos: Turno[] = [];
   turnosMap: { [key: string]: Turno } = {};
   calendario!: CalendarioDTO;
+  feriadosMap: { [fechaStr: string]: string } = {};
 
   hayTurnosSemanaAnterior: boolean = true;
   hayTurnosSemanaSiguiente: boolean = true;
@@ -52,6 +58,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
   obrasSociales: ObraSocial[] = [];
 
   cargando: boolean = true;
+  private highlightTimeout: any;
 
   inicioSemana: moment.Moment = moment().isoWeekday(1);
 
@@ -62,7 +69,8 @@ export class CalendarioComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private pacientesService: PacienteService,
     private empleadosService: EmpleadosService,
-    private obraSocialService: ObraSocialService
+    private obraSocialService: ObraSocialService,
+    private feriadosService: FeriadosArgentinaService
   ) {
     moment.locale('es');
     moment.updateLocale('es', { week: { dow: 1 } });
@@ -74,7 +82,15 @@ export class CalendarioComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['calendarioId'] && this.calendarioId) {
+      if (this.highlightFecha) {
+        this.inicioSemana = moment(this.highlightFecha, 'YYYY-MM-DD').isoWeekday(1);
+      }
       this.cargarCalendarioPorId(this.calendarioId);
+    }
+    if (changes['highlightFecha'] && this.highlightFecha && !changes['calendarioId']) {
+      this.inicioSemana = moment(this.highlightFecha, 'YYYY-MM-DD').isoWeekday(1);
+      this.actualizarCalendario();
+      this.obtenerTurnos();
     }
   }
 
@@ -107,6 +123,43 @@ export class CalendarioComponent implements OnInit, OnChanges {
     }
   }
 
+  filtrarDiasSinTurnos(): void {
+    this.diasSemana = this.diasSemana.filter(dia => {
+      const fechaStr = dia.split(' ')[1];
+      return this.horarios.some(hora => this.turnosMap[`${fechaStr}_${hora}`]);
+    });
+  }
+
+  actualizarFeriados(): void {
+    this.feriadosMap = {};
+    const anio = this.inicioSemana.year();
+    this.diasSemana.forEach(dia => {
+      const fechaStr = dia.split(' ')[1];
+      const feriado = this.feriadosService.esFeriadoStr(fechaStr, anio);
+      if (feriado) {
+        this.feriadosMap[fechaStr] = feriado.nombre;
+      }
+    });
+  }
+
+  esFeriado(dia: string): string | null {
+    const fechaStr = dia.split(' ')[1];
+    return this.feriadosMap[fechaStr] || null;
+  }
+
+  esHighlight(dia: string, hora: string): boolean {
+    if (!this.highlightFecha || !this.highlightHorario) return false;
+    const fechaStr = dia.split(' ')[1];
+    const highlightDDMM = moment(this.highlightFecha, 'YYYY-MM-DD').format('DD/MM');
+    const highlightHora = moment(this.highlightHorario, 'HH:mm:ss').format('HH:mm');
+    return fechaStr === highlightDDMM && hora === highlightHora;
+  }
+
+  limpiarHighlight(): void {
+    this.highlightFecha = null;
+    this.highlightHorario = null;
+  }
+
   generarHorarios(): void {
     this.horarios = [];
     if (!this.calendario) return;
@@ -132,8 +185,14 @@ export class CalendarioComponent implements OnInit, OnChanges {
       next: (turnos) => {
         this.turnos = turnos || [];
         this.actualizarTurnosMap();
+        this.filtrarDiasSinTurnos();
+        this.actualizarFeriados();
         this.cargando = false;
         this.verificarSemanasVecinas();
+        if (this.highlightFecha) {
+          clearTimeout(this.highlightTimeout);
+          this.highlightTimeout = setTimeout(() => this.limpiarHighlight(), 4000);
+        }
       },
       error: () => this.cargando = false
     });
@@ -160,6 +219,7 @@ export class CalendarioComponent implements OnInit, OnChanges {
     if (turno.asistio) return 'turno turno-asistido';
     if (turno.disponible) return 'turno turno-disponible';
     if (turno.confirmado) return 'turno turno-confirmado';
+    if (!turno.disponible && turno.mensajeConfirmacionEnviado) return 'turno turno-enviado';
     return 'turno turno-ocupado';
   }
 
@@ -198,8 +258,12 @@ export class CalendarioComponent implements OnInit, OnChanges {
       })
       .toDate();
 
+    const intervaloMinutos = this.calendario?.intervaloTurnos
+      ? moment.duration(this.calendario.intervaloTurnos).asMinutes()
+      : 30;
+
     const dialogRef = this.dialog.open(CrearturnodialogComponent, {
-      data: { fechaHora: fechaSeleccionada }
+      data: { fechaHora: fechaSeleccionada, intervaloMinutos }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -209,7 +273,8 @@ export class CalendarioComponent implements OnInit, OnChanges {
         IdPaciente: result.pacienteId,
         IdOdontologo: result.odontologoId,
         IdObraSocial: result.obraSocialId,
-        Observaciones: result.observaciones
+        Observaciones: result.observaciones,
+        CantidadSlots: result.cantidadSlots || 1
       };
 
       const keyFecha = moment(result.fechaHora).format('DD/MM');

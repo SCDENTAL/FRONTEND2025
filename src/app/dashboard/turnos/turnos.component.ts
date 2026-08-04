@@ -4,12 +4,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 import { CalendarioComponent } from "./calendario/calendario.component";
 import { CalendarioDialogComponent } from '../../dialogs/calendario-dialog/calendario-dialog.component';
+import { ExtenderCalendarioDialogComponent } from '../../dialogs/extender-calendario-dialog/extender-calendario-dialog.component';
 import { CalendarioService } from '../../service/calendario.service';
 import { TurnosService } from '../../service/turnos.service';
 import { CalendarioDTO } from '../../interface/CalendarioDTO/calendariodto';
@@ -23,6 +27,8 @@ import { CalendarioDTO } from '../../interface/CalendarioDTO/calendariodto';
     MatTableModule,
     MatIconModule,
     MatSelectModule,
+    MatMenuModule,
+    MatFormFieldModule,
     CalendarioComponent
   ],
   templateUrl: './turnos.component.html',
@@ -33,12 +39,15 @@ export class TurnosComponent implements OnInit {
   calendario!: CalendarioDTO;
   calendarios: CalendarioDTO[] = [];
   cargando: boolean = true;
+  highlightFecha: string | null = null;
+  highlightHorario: string | null = null;
 
   constructor(
     private dialog: MatDialog,
     private http: HttpClient,
     private calendarioService: CalendarioService,
-    private turnoService: TurnosService
+    private turnoService: TurnosService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -49,11 +58,24 @@ export class TurnosComponent implements OnInit {
     this.calendarioService.obtenerCalendarios().subscribe({
       next: (calendarios) => {
         this.calendarios = calendarios;
-        if (calendarios.length > 0) {
-          this.calendario = calendarios[0];
+
+        const params = this.route.snapshot.queryParams;
+        const calIdRaw = params['calendarioId'];
+        const calId = calIdRaw ? +calIdRaw : null;
+        const tieneFecha = !!params['fecha'];
+
+        if (calId && calId > 0) {
+          const found = calendarios.find(c => c.id === calId);
+          this.calendario = found || (calendarios.length > 0 ? calendarios[0] : undefined!);
         } else {
-          this.calendario = undefined!;
+          this.calendario = calendarios.length > 0 ? calendarios[0] : undefined!;
         }
+
+        if (tieneFecha) {
+          this.highlightFecha = params['fecha'].split('T')[0];
+          this.highlightHorario = params['horario'] || null;
+        }
+
         this.cargando = false;
       },
       error: () => {
@@ -84,44 +106,22 @@ export class TurnosComponent implements OnInit {
       ? new Date(this.calendario.fechaFin).toISOString().split('T')[0]
       : '';
 
-    Swal.fire({
-      title: 'Extender Calendario',
-      html: `
-        <p style="margin-bottom: 0.5rem;">Fecha fin actual: <strong>${fechaActual}</strong></p>
-        <label style="display:block; text-align:left; margin-bottom:4px;">Nueva fecha de fin:</label>
-        <input type="date" id="swal-fecha" class="swal2-input" min="${fechaActual}">
-        <div style="margin-top: 10px; text-align:left;">
-          <label><input type="checkbox" id="swal-excluir-dom" checked> Excluir domingos</label>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Extender',
-      cancelButtonText: 'Cancelar',
-      preConfirm: () => {
-        const fecha = (document.getElementById('swal-fecha') as HTMLInputElement).value;
-        const excluirDomingo = (document.getElementById('swal-excluir-dom') as HTMLInputElement).checked;
-        if (!fecha) {
-          Swal.showValidationMessage('Seleccioná una fecha');
-          return;
-        }
-        if (fecha <= fechaActual) {
-          Swal.showValidationMessage('La fecha debe ser posterior a la fecha fin actual');
-          return;
-        }
-        return { fechaFin: new Date(fecha).toISOString(), excluirDomingo };
-      }
-    }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        this.calendarioService.extenderCalendario(this.calendario.id, result.value).subscribe({
-          next: () => {
-            Swal.fire('Extendido', 'Calendario extendido con éxito.', 'success');
-            this.cargarCalendarios();
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo extender el calendario.', 'error');
-          }
-        });
-      }
+    const dialogRef = this.dialog.open(ExtenderCalendarioDialogComponent, {
+      data: { fechaFin: fechaActual },
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result: { fechaFin: string; excluirDomingo: boolean } | undefined) => {
+      if (!result) return;
+      this.calendarioService.extenderCalendario(this.calendario.id, result).subscribe({
+        next: () => {
+          Swal.fire('Extendido', 'Calendario extendido con éxito.', 'success');
+          this.cargarCalendarios();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo extender el calendario.', 'error');
+        },
+      });
     });
   }
 

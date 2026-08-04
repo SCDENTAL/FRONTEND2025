@@ -7,4 +7,5 @@ export interface TurnoDetalleDTO {
   confirmado: boolean;
   asistio: boolean | null;
   observaciones: string | null;
+  idCalendario: number;
 }

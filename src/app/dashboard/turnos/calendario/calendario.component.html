@@ -17,8 +17,12 @@
     <thead>
       <tr>
         <th class="headers horarios">Horarios</th>
-        <th *ngFor="let dia of diasSemana; trackBy: trackByDia" class="headers">
+        <th *ngFor="let dia of diasSemana; trackBy: trackByDia"
+            class="headers"
+            [class.header-feriado]="esFeriado(dia)"
+            [matTooltip]="esFeriado(dia) || ''">
           {{ dia }}
+          <span *ngIf="esFeriado(dia)" class="feriado-badge">F</span>
         </th>
       </tr>
     </thead>
@@ -27,7 +31,11 @@
         <td class="horarios">{{ hora }}</td>
         <td *ngFor="let dia of diasSemana; trackBy: trackByDia">
           <ng-container *ngIf="getTurnoMap(dia, hora) as turno">
-            <div [ngClass]="estiloTurno(turno)" (click)="manejarClick(turno, dia, hora)" style="position: relative;">
+            <div [ngClass]="estiloTurno(turno)"
+                 [class.turno-highlight]="esHighlight(dia, hora)"
+                 [class.celda-feriado]="esFeriado(dia)"
+                 (click)="manejarClick(turno, dia, hora)"
+                 style="position: relative;">
               <span class="texto-disponibilidad">
                 <ng-container *ngIf="turno?.disponible">
                   <span class="disponible-desktop">Disponible</span>
@@ -44,7 +52,12 @@
                   <span class="confirmado-mobile">Conf.</span>
                 </ng-container>
 
-                <ng-container *ngIf="!turno?.disponible && !turno?.asistio && !turno?.confirmado">
+                <ng-container *ngIf="!turno?.disponible && !turno?.asistio && !turno?.confirmado && turno?.mensajeConfirmacionEnviado">
+                  <span class="enviado-desktop">Enviado</span>
+                  <span class="enviado-mobile">Env.</span>
+                </ng-container>
+
+                <ng-container *ngIf="!turno?.disponible && !turno?.asistio && !turno?.confirmado && !turno?.mensajeConfirmacionEnviado">
                   <span class="reservado-desktop">Reservado</span>
                   <span class="reservado-mobile">Res.</span>
                 </ng-container>

@@ -7,7 +7,7 @@ import { EditarTurnoDTO } from '../interface/TurnoDTO/EditarTurnoDTO';
 import { Turno } from '../interface/turno';
 import { ReservarTurnoDTO } from '../interface/TurnoDTO/ReservarTurnoDTO';
 import { TurnoOdontologo } from '../interface/turno-odontologo';
-import { environment } from '../../environments/environments.prod';
+import { environment } from '../../environments/environments';
 
 
 

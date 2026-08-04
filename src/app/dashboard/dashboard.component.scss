@@ -11,80 +11,144 @@
 .sidenav {
   width: 300px;
   padding: 0;
-  background-color: #f8f9fa;
+  background: linear-gradient(180deg, #1a1f36 0%, #252b48 100%);
   display: flex;
   flex-direction: column;
   height: 100%;
+  border-right: none;
+}
+
+.brand-header {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .brand-logo {
+    width: 160px;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+  }
+
+  .brand-subtitle {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 8px;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
 }
 
 .nav-items {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; 
+  flex-grow: 1;
+  padding: 0.75rem 0.75rem 0;
+  gap: 2px;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 46px;
   padding: 0 1rem;
-  font-size: 19px;
-  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  position: relative;
 
   .emoji {
-    margin-right: 12px;
-    font-size: 22px;
+    margin-right: 14px;
+    font-size: 20px;
     line-height: 1;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
   }
 
   span {
     line-height: 1;
   }
 
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+
+    .emoji {
+      opacity: 1;
+    }
+  }
+
   &.active {
-    background-color: rgba(0, 123, 255, 0.1);
+    background: rgba(99, 132, 255, 0.15);
+    color: #8da4ff;
     font-weight: 600;
+
+    .emoji {
+      opacity: 1;
+    }
   }
 }
 
 .logout-container {
-  padding: 1rem;
+  padding: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 
   .logout-button {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-weight: 600;
-    color: #dc3545;
+    font-weight: 500;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    height: 44px;
+    transition: all 0.2s ease;
 
     mat-icon {
-      margin-right: 8px;
+      margin-right: 10px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
 
     &:hover {
-      background-color: rgba(220, 53, 69, 0.1);
+      background: rgba(239, 83, 80, 0.12);
+      color: #ef5350;
     }
   }
 }
 
-.main-toolbar {
-  padding: 0 1rem;
+.main-content {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 
-  .app-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
+  @media (max-width: 768px) {
+    height: auto;
+    display: block;
   }
 }
 
-.menu-button {
+.mobile-toolbar {
   display: none;
 
   @media (max-width: 768px) {
-    display: inline-flex;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
   }
 }
 
@@ -92,10 +156,10 @@
   .nav-items a.nav-link {
     font-size: 28px;
     padding: 10px;
-    justify-content: flex-start;    
+    justify-content: flex-start;
   }
-   
-   .logout-button {
+
+  .logout-button {
     height: 60px;
     font-size: 20px;
     padding: 0 16px;
@@ -104,22 +168,21 @@
       font-size: 17px;
     }
 
+    .emoji {
+      display: inline-block;
+    }
 
-  .emoji {
-    display: inline-block;
-  }
-
-  .label {
-    display: inline-block;
-  }
-
-  .logout-button {
-    justify-content: flex-start;
-
-    .emoji,
     .label {
       display: inline-block;
     }
+
+    .logout-button {
+      justify-content: flex-start;
+
+      .emoji,
+      .label {
+        display: inline-block;
+      }
+    }
   }
-}
 }

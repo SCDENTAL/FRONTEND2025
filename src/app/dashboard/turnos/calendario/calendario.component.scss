@@ -44,13 +44,23 @@
 }
 
 .turno-confirmado {
-  background-color: #d1c4e9; 
-  color: #4a148c;           
+  background-color: #d1c4e9;
+  color: #4a148c;
   font-weight: bold;
 }
 
 .turno-confirmado:hover {
   background-color: #b39ddb;
+}
+
+.turno-enviado {
+  background-color: #ffe0b2;
+  color: #e65100;
+  font-weight: 500;
+}
+
+.turno-enviado:hover {
+  background-color: #ffcc80;
 }
 
 .sin-turno {
@@ -63,28 +73,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 16px;
   padding: 0 16px;
 
   .btn-nav {
-    padding: 8px 14px;
+    padding: 8px 16px;
     border: none;
-    background-color: #1976d2;
+    background-color: #1a1f36;
     color: white;
     font-weight: 500;
-    border-radius: 6px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    border-radius: 8px;
     cursor: pointer;
     white-space: nowrap;
-    transition: background-color 0.2s ease-in-out, transform 0.15s;
+    transition: background-color 0.2s ease;
 
     &:hover:not(:disabled) {
-      background-color: #1565c0;
-      transform: translateY(-1px);
+      background-color: #252b48;
     }
 
     &:disabled {
-      background-color: #9e9e9e;
+      background-color: #d1d5db;
+      color: #9ca3af;
       cursor: not-allowed;
     }
   }
@@ -92,42 +104,25 @@
   .titulo-semana {
     flex: 1;
     text-align: center;
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: #333;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1f36;
+    white-space: nowrap;
   }
 }
 
-/* 🔹 Tablet */
-@media (max-width: 992px) {
-  .semana-nav {
-    .btn-nav {
-      padding: 6px 12px;
-      font-size: 0.9rem;
-    }
-
-    .titulo-semana {
-      font-size: 1rem;
-    }
-  }
-}
-
-/* 🔹 Mobile */
 @media (max-width: 600px) {
   .semana-nav {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 6px;
+    padding: 0 8px;
 
     .btn-nav {
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
+      padding: 6px 10px;
+      font-size: 0.75rem;
     }
 
     .titulo-semana {
-      margin: 6px 0;
-      text-align: center;
-      font-size: 1rem;
+      font-size: 0.85rem;
     }
   }
 }
@@ -187,26 +182,30 @@ td {
 
 .disponible-desktop,
 .asistio-desktop,
-.reservado-desktop {
+.reservado-desktop,
+.enviado-desktop {
   display: inline;
 }
 
 .disponible-mobile,
 .asistio-mobile,
-.reservado-mobile {
+.reservado-mobile,
+.enviado-mobile {
   display: none;
 }
 
 @media (max-width: 600px) {
   .disponible-desktop,
   .asistio-desktop,
-  .reservado-desktop {
+  .reservado-desktop,
+  .enviado-desktop {
     display: none;
   }
 
   .disponible-mobile,
-  .asistio-mobile,  
-  .reservado-mobile {
+  .asistio-mobile,
+  .reservado-mobile,
+  .enviado-mobile {
     display: inline;
   }
 }
@@ -222,21 +221,6 @@ td {
 }
 
 @media (max-width: 600px) {
-  .semana-nav {
-    flex-direction: column;
-    align-items: stretch;
-
-    button {
-      width: 100%;
-    }
-
-    .titulo-semana {
-      margin: 8px 0;
-      text-align: center;
-      font-size: 1rem;
-    }
-  }
-
   .contenedor-calendario {
     padding: 8px;
   }
@@ -298,4 +282,41 @@ td {
   td {
     padding: 0;
   }
+}
+
+.header-feriado {
+  background-color: #c62828 !important;
+  color: #fff !important;
+  position: relative;
+}
+
+.feriado-badge {
+  display: inline-block;
+  background: #fff;
+  color: #c62828;
+  font-size: 0.6rem;
+  font-weight: 700;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  border-radius: 50%;
+  text-align: center;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.celda-feriado {
+  opacity: 0.6;
+}
+
+.turno-highlight {
+  background-color: #fff176 !important;
+  box-shadow: inset 0 0 0 3px #f9a825;
+  animation: highlightPulse 1s ease-in-out 4;
+  z-index: 2;
+}
+
+@keyframes highlightPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }

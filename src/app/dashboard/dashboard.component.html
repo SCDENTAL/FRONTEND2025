@@ -1,6 +1,11 @@
 <mat-sidenav-container class="sidenav-container d-flex">
   <mat-sidenav #drawer class="sidenav" [mode]="sidenavMode" [opened]="sidenavOpened">
     <div class="sidenav-inner">
+      <div class="brand-header">
+        <img src="assets/logo.png" alt="SC Dental" class="brand-logo">
+        <div class="brand-subtitle">Panel de administración</div>
+      </div>
+
       <div class="nav-items">
         <a class="nav-link" routerLink="turnos" routerLinkActive="active" (click)="closeDrawer()">
           <span class="emoji">📅</span>
@@ -18,9 +23,13 @@
           <span class="emoji">📄</span>
           <span>Obras Sociales</span>
         </a>
-          <a class="nav-link" routerLink="historial" routerLinkActive="active" (click)="closeDrawer()">
+        <a class="nav-link" routerLink="historial" routerLinkActive="active" (click)="closeDrawer()">
           <span class="emoji">📝</span>
           <span>Historial</span>
+        </a>
+        <a class="nav-link" routerLink="whatsapp" routerLinkActive="active" (click)="closeDrawer()">
+          <span class="emoji">💬</span>
+          <span>WhatsApp</span>
         </a>
       </div>
 
@@ -34,12 +43,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    <mat-toolbar color="primary" class="main-toolbar d-flex align-items-center">
+    <div class="mobile-toolbar">
       <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="app-title">Panel del administrador.</span>
-    </mat-toolbar>
+    </div>
 
     <div class="main-content p-3">
       <router-outlet></router-outlet>

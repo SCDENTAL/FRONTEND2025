@@ -1,42 +1,41 @@
 <div class="turnos-container">
 
-  <!-- Barra de acciones -->
   <div class="acciones-calendario">
-    <div class="acciones-botones">
-      <button mat-raised-button color="primary" (click)="abrirDialogoCrearCalendario()">
-        Crear calendario
-      </button>
+    <mat-form-field appearance="outline" class="select-calendario">
+      <mat-label>Seleccionar calendario</mat-label>
+      <mat-select [(value)]="calendario" (selectionChange)="seleccionarCalendario($event.value)">
+        <mat-option *ngFor="let cal of calendarios" [value]="cal">
+          {{ cal.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <button mat-raised-button (click)="extenderCalendario()" [disabled]="!calendario">
-        Extender calendario
-      </button>
+    <button mat-raised-button class="btn-acciones" [matMenuTriggerFor]="menuCalendario">
+      <mat-icon>settings</mat-icon>
+      Acciones
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
 
-      <button mat-raised-button color="warn" (click)="eliminarCalendario()" [disabled]="!calendario">
-        Eliminar calendario
+    <mat-menu #menuCalendario="matMenu">
+      <button mat-menu-item (click)="abrirDialogoCrearCalendario()">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Crear calendario</span>
       </button>
-    </div>
-
-    <div class="acciones-select">
-      <mat-form-field appearance="fill" class="select-calendario">
-        <mat-label>Seleccionar calendario</mat-label>
-        <mat-select [(value)]="calendario" (selectionChange)="seleccionarCalendario($event.value)">
-          <mat-option *ngFor="let cal of calendarios" [value]="cal">
-            {{ cal.nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+      <button mat-menu-item (click)="extenderCalendario()" [disabled]="!calendario">
+        <mat-icon>date_range</mat-icon>
+        <span>Extender calendario</span>
+      </button>
+      <button mat-menu-item (click)="eliminarCalendario()" [disabled]="!calendario" class="menu-eliminar">
+        <mat-icon>delete_outline</mat-icon>
+        <span>Eliminar calendario</span>
+      </button>
+    </mat-menu>
   </div>
 
-  <!-- Mensaje de carga -->
-  
-
-  <!-- Calendario seleccionado -->
   <div *ngIf="!cargando && calendario" class="calendario-wrapper">
-    <app-calendario [calendarioId]="calendario.id"></app-calendario>
+    <app-calendario [calendarioId]="calendario.id" [highlightFecha]="highlightFecha" [highlightHorario]="highlightHorario"></app-calendario>
   </div>
 
-  <!-- Mensaje si no hay calendarios -->
   <div *ngIf="!cargando && !calendario" class="sin-calendario">
     No hay calendarios disponibles. Crea uno para empezar.
   </div>

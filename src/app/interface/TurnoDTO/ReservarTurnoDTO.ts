@@ -3,4 +3,5 @@ export interface ReservarTurnoDTO {
   IdOdontologo?: number | null;
   IdObraSocial?: number | null;
   Observaciones?: string;
+  CantidadSlots?: number;
 }

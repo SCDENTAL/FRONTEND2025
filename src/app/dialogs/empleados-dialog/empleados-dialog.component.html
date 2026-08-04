@@ -1,6 +1,6 @@
 <div class="contenedor-dialog">
     <div class="header-dialog">
-      <h1 class="title">{{ data?.empleado ? 'Editar' : 'Agregar' }} Odontólogos</h1>
+      <h1 class="title">{{ data.empleado ? 'Editar' : 'Agregar' }} Odontólogos</h1>
     </div>
   
     <div class="body-dialog">
@@ -37,7 +37,7 @@
     <div class="footer-dialog">
       <button mat-stroked-button color="warn" (click)="onCancel()">Cancelar</button>
       <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">
-        {{ data?.empleado ? 'Guardar Cambios' : 'Agregar' }}
+        {{ data.empleado ? 'Guardar Cambios' : 'Agregar' }}
       </button>
     </div>
   </div>

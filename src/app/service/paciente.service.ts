@@ -4,7 +4,7 @@ import { Paciente } from '../interface/paciente';
 import { Observable } from 'rxjs';
 import { pacienteDTO } from '../interface/pacienteDTO';
 import { PacienteDTO } from '../interface/PacienteDTO/PacienteDTO';
-import { environment } from '../../environments/environments.prod';
+import { environment } from '../../environments/environments';
 
 
 

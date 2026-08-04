@@ -1,137 +1,81 @@
-<!-- <mat-form-field class="w-full">
-  <input
-    type="text"
-    placeholder="Buscar paciente"
-    aria-label="Paciente"
-    matInput
-    [matAutocomplete]="auto"
-    (input)="buscar($event)"
-    [(ngModel)]="textoBusqueda"
-  >
-  <mat-autocomplete 
-    #auto="matAutocomplete" 
-    (optionSelected)="verHistorial($event.option.value)"
-    [displayWith]="mostrarPaciente">
-    <mat-option *ngFor="let paciente of pacientes" [value]="paciente">
-      {{ paciente.nombre }} {{ paciente.apellido }} - DNI: {{ paciente.dni }}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
+<div class="historial-container">
+  <div class="toolbar-header">
+    <h1>Historial</h1>
+    <mat-form-field appearance="outline" class="buscador">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="auto"
+        (input)="buscar($event)"
+        [(ngModel)]="textoBusqueda"
+        placeholder="Buscar paciente..."
+      >
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="verHistorial($event.option.value)"
+        [displayWith]="mostrarPaciente">
+        <mat-option *ngFor="let paciente of pacientes" [value]="paciente">
+          {{ paciente.nombre }} {{ paciente.apellido }} - DNI: {{ paciente.dni }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
 
-<div *ngIf="historial.length > 0">
-  <h3>Historial de {{ pacienteSeleccionado?.nombre }}:</h3>
+  <div *ngIf="dataSource.data.length > 0" class="historial-tabla-area">
+    <h3>Historial de {{ pacienteSeleccionado?.nombre }} {{ pacienteSeleccionado?.apellido }}</h3>
 
-  <table mat-table [dataSource]="historial" class="mat-elevation-z2">
+    <div class="tabla-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
 
-    
-    <ng-container matColumnDef="fecha">
-      <th mat-header-cell *matHeaderCellDef> Fecha </th>
-      <td mat-cell *matCellDef="let turno"> 
-        {{ turno.fecha | date:'dd/MM/yyyy' }}
-      </td>
-    </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let turno">{{ turno.fecha | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
 
-    
-    <ng-container matColumnDef="horario">
-      <th mat-header-cell *matHeaderCellDef> Horario </th>
-      <td mat-cell *matCellDef="let turno"> {{ turno.horario }} </td>
-    </ng-container>
+        <ng-container matColumnDef="horario">
+          <th mat-header-cell *matHeaderCellDef>Horario</th>
+          <td mat-cell *matCellDef="let turno">{{ turno.horario }}</td>
+        </ng-container>
 
-    
-    <ng-container matColumnDef="odontologo">
-      <th mat-header-cell *matHeaderCellDef> Odontólogo </th>
-      <td mat-cell *matCellDef="let turno"> {{ turno.odontologo }} </td>
-    </ng-container>
+        <ng-container matColumnDef="odontologo">
+          <th mat-header-cell *matHeaderCellDef>Odontólogo</th>
+          <td mat-cell *matCellDef="let turno">{{ turno.odontologo }}</td>
+        </ng-container>
 
-    
-    <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef> Estado </th>
-      <td mat-cell *matCellDef="let turno">
-        <span [ngClass]="getEstadoTurno(turno).clase">
-          {{ getEstadoTurno(turno).texto }}
-        </span>
-      </td>
-    </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let turno">
+            <span [ngClass]="getEstadoTurno(turno).clase">
+              {{ getEstadoTurno(turno).texto }}
+            </span>
+          </td>
+        </ng-container>
 
-    
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
-  
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let turno">
+            <button mat-icon-button class="btn-ver" (click)="verDetalle(turno)" matTooltip="Ver detalle">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button class="btn-ver" (click)="verEnCalendario(turno)" matTooltip="Ver en calendario">
+              <mat-icon>event</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-<div *ngIf="historial.length === 0 && pacienteSeleccionado">
-  <p>No se encontraron turnos para este paciente.</p>
-</div> -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
 
+      <mat-paginator [length]="dataSource.data.length || 0"
+                     [pageSize]="50"
+                     [pageSizeOptions]="[10, 25, 50]">
+      </mat-paginator>
+    </div>
+  </div>
 
-<mat-form-field class="w-full">
-  <input
-    type="text"
-    placeholder="Buscar paciente"
-    aria-label="Paciente"
-    matInput
-    [matAutocomplete]="auto"
-    (input)="buscar($event)"
-    [(ngModel)]="textoBusqueda"
-  >
-  <mat-autocomplete 
-    #auto="matAutocomplete" 
-    (optionSelected)="verHistorial($event.option.value)"
-    [displayWith]="mostrarPaciente">
-    <mat-option *ngFor="let paciente of pacientes" [value]="paciente">
-      {{ paciente.nombre }} {{ paciente.apellido }} - DNI: {{ paciente.dni }}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
-
-<div *ngIf="dataSource.data.length > 0">
-  <h3>Historial de {{ pacienteSeleccionado?.nombre }}:</h3>
-
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
-
-    <!-- Fecha -->
-    <ng-container matColumnDef="fecha">
-      <th mat-header-cell *matHeaderCellDef> Fecha </th>
-      <td mat-cell *matCellDef="let turno"> 
-        {{ turno.fecha | date:'dd/MM/yyyy' }}
-      </td>
-    </ng-container>
-
-    <!-- Horario -->
-    <ng-container matColumnDef="horario">
-      <th mat-header-cell *matHeaderCellDef> Horario </th>
-      <td mat-cell *matCellDef="let turno"> {{ turno.horario }} </td>
-    </ng-container>
-
-    <!-- Odontólogo -->
-    <ng-container matColumnDef="odontologo">
-      <th mat-header-cell *matHeaderCellDef> Odontólogo </th>
-      <td mat-cell *matCellDef="let turno"> {{ turno.odontologo }} </td>
-    </ng-container>
-
-    <!-- Estado -->
-    <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef> Estado </th>
-      <td mat-cell *matCellDef="let turno">
-        <span [ngClass]="getEstadoTurno(turno).clase">
-          {{ getEstadoTurno(turno).texto }}
-        </span>
-      </td>
-    </ng-container>
-
-    <!-- Header y filas -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <!-- 🔹 Paginador -->
-  <mat-paginator [length]="dataSource?.data?.length || 0"
-                 [pageSize]="5"
-                 [pageSizeOptions]="[5, 10, 20]">
-  </mat-paginator>
-</div>
-
-<div *ngIf="dataSource.data.length === 0 && pacienteSeleccionado">
-  <p>No se encontraron turnos para este paciente.</p>
+  <div *ngIf="dataSource.data.length === 0 && pacienteSeleccionado" class="sin-resultados">
+    <p>No se encontraron turnos para este paciente.</p>
+  </div>
 </div>
