@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -33,6 +33,7 @@ import { ObraSocialService } from '../../service/obra-social.service';
 export class PacientesDialogComponent implements OnInit {
 
   isSaving = false;
+  telefonoPreview = '';
 
   form!: FormGroup;
   obrasSociales: ObraSocial[] = [];
@@ -76,8 +77,8 @@ export class PacientesDialogComponent implements OnInit {
     this.form = this.fb.group({
       nombre: [this.data?.paciente?.nombre || '', Validators.required],
       apellido: [this.data?.paciente?.apellido || '', Validators.required],
-      dni: [this.data?.paciente?.dni || '', Validators.required],
-      telefono: [this.data?.paciente?.telefono || '', Validators.required],
+      dni: [this.data?.paciente?.dni || ''],
+      telefono: [this.data?.paciente?.telefono || '', [this.telefonoArgentinoValidator]],
       email: [this.data?.paciente?.email || '', Validators.email],
       obraSocialId: [
         this.data?.paciente?.obraSocial
@@ -104,9 +105,9 @@ export class PacientesDialogComponent implements OnInit {
       id: this.data?.paciente?.id || 0,
       nombre: formValue.nombre,
       apellido: formValue.apellido,
-      dni: formValue.dni,
-      telefono: formValue.telefono,
-      email: formValue.email,
+      dni: formValue.dni ? +formValue.dni : null,
+      telefono: formValue.telefono || null,
+      email: formValue.email || null,
       obraSocialId: +formValue.obraSocialId
     };
 
@@ -131,6 +132,50 @@ export class PacientesDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  limpiarTelefono(valor: string): string {
+    let num = valor.replace(/[\s\-\(\)\.]/g, '');
+    if (num.startsWith('+549')) num = num.substring(4);
+    else if (num.startsWith('+54')) num = num.substring(3);
+    else if (num.startsWith('549')) num = num.substring(3);
+    else if (num.startsWith('54')) num = num.substring(2);
+    if (num.startsWith('0')) num = num.substring(1);
+    if (num.length === 12 && num.includes('15')) {
+      for (const pos of [2, 3, 4]) {
+        if (num.substring(pos, pos + 2) === '15') {
+          num = num.substring(0, pos) + num.substring(pos + 2);
+          break;
+        }
+      }
+    }
+    return num;
+  }
+
+  onTelefonoBlur(): void {
+    const raw = this.form.get('telefono')?.value || '';
+    if (!raw) { this.telefonoPreview = ''; return; }
+    const limpio = this.limpiarTelefono(raw);
+    this.form.get('telefono')?.setValue(limpio, { emitEvent: false });
+    this.actualizarPreviewTelefono(limpio);
+  }
+
+  private actualizarPreviewTelefono(num: string): void {
+    if (/^\d{10}$/.test(num)) {
+      const area = num.length === 10 && num.startsWith('11') ? num.substring(0, 2) : num.substring(0, 3);
+      const resto = num.substring(area.length);
+      this.telefonoPreview = `+54 9 ${area} ${resto}`;
+    } else {
+      this.telefonoPreview = '';
+    }
+  }
+
+  private telefonoArgentinoValidator(control: AbstractControl): ValidationErrors | null {
+    const valor = control.value;
+    if (!valor) return null;
+    const soloDigitos = valor.replace(/\D/g, '');
+    if (soloDigitos.length !== 10) return { telefonoInvalido: true };
+    return null;
   }
 
   get nombre() { return this.form.get('nombre'); }

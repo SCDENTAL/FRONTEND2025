@@ -24,17 +24,19 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Dni</mat-label>
-          <input matInput formControlName="dni" required>
-          <mat-error *ngIf="dni?.invalid && (dni?.dirty || dni?.touched)">
-            El dni es obligatorio
-          </mat-error>
+          <input matInput formControlName="dni">
+          <mat-hint>Opcional</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Teléfono</mat-label>
-          <input matInput formControlName="telefono" required>
-          <mat-error *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)">
-            El teléfono es obligatorio
+          <input matInput formControlName="telefono"
+                 placeholder="Ej: 3512836055"
+                 (blur)="onTelefonoBlur()">
+          <mat-hint *ngIf="telefonoPreview">WhatsApp: {{ telefonoPreview }}</mat-hint>
+          <mat-hint *ngIf="!telefonoPreview && !telefono?.errors">Opcional. Sin 0 y sin 15. Ej: 3512836055</mat-hint>
+          <mat-error *ngIf="telefono?.hasError('telefonoInvalido')">
+            Debe tener 10 dígitos (código de área + número, sin 0 y sin 15)
           </mat-error>
         </mat-form-field>
 
