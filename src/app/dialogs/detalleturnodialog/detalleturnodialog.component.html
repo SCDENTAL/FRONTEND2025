@@ -48,7 +48,7 @@
 
   <div mat-dialog-actions align="end">
     <button (click)="enviarWhatsApp()" mat-raised-button
-      [disabled]="enviandoWhatsApp || turno.disponible || !paciente"
+      [disabled]="enviandoWhatsApp || turno.disponible || !paciente || turno.mensajeConfirmacionEnviado"
       style="background-color: #25D366; color: white;">
       <mat-icon>send</mat-icon>
       {{ enviandoWhatsApp ? 'Enviando...' : 'Enviar WhatsApp' }}
