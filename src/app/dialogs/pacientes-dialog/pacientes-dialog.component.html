@@ -34,7 +34,7 @@
                  placeholder="Ej: 3512836055"
                  (blur)="onTelefonoBlur()">
           <mat-hint *ngIf="telefonoPreview">WhatsApp: {{ telefonoPreview }}</mat-hint>
-          <mat-hint *ngIf="!telefonoPreview && !telefono?.errors">Opcional. Sin 0 y sin 15. Ej: 3512836055</mat-hint>
+          <mat-hint *ngIf="!telefonoPreview && !telefono?.errors">Opcional</mat-hint>
           <mat-error *ngIf="telefono?.hasError('telefonoInvalido')">
             Debe tener 10 dígitos (código de área + número, sin 0 y sin 15)
           </mat-error>
